@@ -1,0 +1,81 @@
+// ----------------------------------------------------------------
+// SqueakSpeak Standard Library
+// ----------------------------------------------------------------
+
+// -------------------- Math Functions --------------------
+
+FluffMagic Add(a, b) {
+    PawReturn a + b;
+}
+
+FluffMagic Subtract(a, b) {
+    PawReturn a - b;
+}
+
+FluffMagic Multiply(a, b) {
+    PawReturn a * b;
+}
+
+FluffMagic Divide(a, b) {
+    PawReturn a / b;
+}
+
+FluffMagic Power(base, exponent) {
+    Brain(pow, base, exponent) -> result;
+    PawReturn result;
+}
+
+FluffMagic SquareRoot(x) {
+    Brain(sqrt, x) -> result;
+    PawReturn result;
+}
+
+// -------------------- String Functions --------------------
+
+FluffMagic Concat(str1, str2) {
+    Cuddle result = str1 + str2;
+    PawReturn result;
+}
+
+FluffMagic ReadLine() {
+    Cuddle input;
+    Listen(input);
+    PawReturn input;
+}
+
+// -------------------- Network Functions --------------------
+
+FluffMagic FetchUrl(url) {
+    Cuddle response;
+    BeepBoop(url) -> response;
+    PawReturn response;
+}
+
+// -------------------- Utility Functions --------------------
+
+FluffMagic IsNull(value) {
+    Peek (value == 0) {
+        PawReturn 1;
+    }
+    Purr {
+        PawReturn 0;
+    }
+}
+
+FluffMagic Max(a, b) {
+    Peek (a > b) {
+        PawReturn a;
+    }
+    Purr {
+        PawReturn b;
+    }
+}
+
+FluffMagic Min(a, b) {
+    Peek (a < b) {
+        PawReturn a;
+    }
+    Purr {
+        PawReturn b;
+    }
+}

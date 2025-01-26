@@ -1,0 +1,11 @@
+﻿// Import the library
+BringWarmth "stdlib/squeaklib.squeak";
+
+// Use the functions
+Cuddle result = Add(5, 3);
+Squeak result;  // Outputs: 8
+
+Cuddle name;
+Squeak "What's your name?";
+name = ReadLine();
+Squeak Concat("Hello, ", name);

@@ -1,0 +1,32 @@
+BringWarmth "lib/standard.ssp";
+BringWarmth "lib/collections.ssp";
+BringWarmth "lib/utils.ssp";
+
+// Define predicate function
+FluffMagic isPositive(x) {
+    Squeak x > 0;
+}
+
+// Define map function
+FluffMagic double(x) {
+    Squeak x * 2;
+}
+
+// Define reduce function
+FluffMagic add(acc, x) {
+    Squeak acc + x;
+}
+
+// Use standard library functions
+Cuddle numbers = [1, -2, 3, -4, 5];
+Cuddle positiveNumbers = filter(numbers, isPositive);
+println("Positive numbers: " + positiveNumbers);
+
+Cuddle doubled = map(numbers, double);
+println("Doubled numbers: " + doubled);
+
+Cuddle sum = reduce(numbers, add, 0);
+println("Sum: " + sum);
+
+sleep(1000);  // Wait 1 second
+println("Current time: " + now()); 

@@ -1,0 +1,4 @@
+﻿Cuddle y = 100;
+Squeak "Hello from Utilities! y=" + y;
+
+// Re-import something or define a function, etc.

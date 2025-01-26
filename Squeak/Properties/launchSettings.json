@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Squeak": {
+      "commandName": "Project",
+      "commandLineArgs": "Test.ssp"
+    },
+    "Assembly": {
+      "commandName": "Project",
+      "commandLineArgs": "Test.ssp -compile"
+    },
+    "Debug": {
+      "commandName": "Project",
+      "commandLineArgs": "Test.ssp -debug Debug"
+    }
+  }
+}

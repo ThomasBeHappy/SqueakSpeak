@@ -1,0 +1,45 @@
+<Window x:Class="SqueakIDE.ConsoleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SqueakSpeak Console" Height="400" Width="600"
+        Background="#0C0C0C">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBox x:Name="OutputTextBox" 
+                 IsReadOnly="True" 
+                 VerticalScrollBarVisibility="Auto" 
+                 HorizontalScrollBarVisibility="Auto"
+                 FontFamily="Cascadia Code, Consolas"
+                 FontSize="14"
+                 Background="#0C0C0C"
+                 Foreground="#CCCCCC"
+                 BorderThickness="0"
+                 Padding="10"
+                 Grid.Row="0"/>
+
+        <DockPanel Grid.Row="1" 
+                   Background="#0C0C0C" 
+                   LastChildFill="True">
+            <TextBlock Text=">" 
+                      Foreground="#CCCCCC" 
+                      FontFamily="Cascadia Code, Consolas"
+                      FontSize="14"
+                      VerticalAlignment="Center"
+                      Margin="10,5,5,5"/>
+            <TextBox x:Name="InputTextBox" 
+                     FontFamily="Cascadia Code, Consolas"
+                     FontSize="14"
+                     Background="#0C0C0C"
+                     Foreground="#CCCCCC"
+                     BorderThickness="0"
+                     VerticalContentAlignment="Center"
+                     Padding="5"
+                     Margin="0,5,10,5"
+                     KeyDown="InputTextBox_KeyDown"/>
+        </DockPanel>
+    </Grid>
+</Window> 

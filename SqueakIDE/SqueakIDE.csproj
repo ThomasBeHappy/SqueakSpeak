@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\SqueakIDE_Logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\keyword.png" />
+    <None Remove="Resources\method.png" />
+    <None Remove="Resources\snippet.png" />
+    <None Remove="Resources\SqueakIDE_Logo.ico" />
+    <None Remove="Resources\variable.png" />
+    <None Remove="SqueakHighlighting.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SqueakIDE_Logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit">
+      <Version>6.2.0.78</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="OpenAI" Version="2.1.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.27.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Squeak\Squeak.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\keyword.png" />
+    <EmbeddedResource Include="Resources\method.png" />
+    <EmbeddedResource Include="Resources\snippet.png" />
+    <EmbeddedResource Include="Resources\variable.png" />
+    <EmbeddedResource Include="SqueakHighlighting.xshd">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SqueakIDE_Logo.ico" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,42 @@
+<Window x:Class="SqueakIDE.Dialogs.NewProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="New Project" Height="200" Width="400"
+        WindowStartupLocation="CenterOwner"
+        Background="#FF202020">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Label Content="Project Name:" Foreground="White"/>
+        <TextBox x:Name="ProjectNameBox" Grid.Row="2" 
+                 Background="#FF303030" Foreground="White" 
+                 BorderBrush="#FF404040"/>
+        
+        <Label Content="Location:" Grid.Row="4" Foreground="White"/>
+        <DockPanel Grid.Row="4">
+            <Button DockPanel.Dock="Right" Content="Browse..." 
+                    Margin="5,0,0,0" Padding="10,0" Click="BrowseButton_Click"
+                    Background="#FF303030" Foreground="White"/>
+            <TextBox x:Name="ProjectPathBox" 
+                     Background="#FF303030" Foreground="White" 
+                     BorderBrush="#FF404040"/>
+        </DockPanel>
+        
+        <StackPanel Grid.Row="6" Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <Button Content="Create" Width="70" Click="CreateButton_Click" 
+                    Margin="0,0,10,0" Background="#FF303030" 
+                    Foreground="White"/>
+            <Button Content="Cancel" Width="70" Click="CancelButton_Click"
+                    Background="#FF303030" Foreground="White"/>
+        </StackPanel>
+    </Grid>
+</Window> 

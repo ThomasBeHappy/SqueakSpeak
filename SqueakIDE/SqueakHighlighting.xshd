@@ -1,0 +1,62 @@
+﻿<SyntaxDefinition name="SqueakSpeak"
+        xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <!-- Define Colors -->
+  <Color name="Keyword" foreground="#569CD6" fontWeight="600" /> <!-- SlateBlue -->
+  <Color name="String" foreground="#D69D85" fontWeight="400" /> <!-- LimeGreen -->
+  <Color name="Number" foreground="#B5CEA8" fontWeight="500" /> <!-- BlueViolet -->
+  <Color name="Comment" foreground="#6A9955" fontWeight="400" fontStyle="italic" /> <!-- SlateGray -->
+  <Color name="Operator" foreground="#C586C0" fontWeight="700" /> <!-- OrangeRed -->
+  <Color name="FunctionCall" foreground="#D4D4D4" fontWeight="600" /> <!-- DodgerBlue -->
+
+  <!-- Rules -->
+  <RuleSet>
+    <!-- Comments -->
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" multiline="true" begin="/\\*" end="\\*/" />
+
+    <!-- Strings -->
+    <Span color="String">
+      <Begin>\"</Begin>
+      <End>\"</End>
+      <RuleSet>
+        <!-- Escape sequences -->
+        <Span begin="\\\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <!-- Keywords -->
+    <Keywords color="Keyword">
+      <Word>Squeak</Word>
+      <Word>Cuddle</Word>
+      <Word>Nuzzle</Word>
+      <Word>FluffMagic</Word>
+      <Word>Peek</Word>
+      <Word>Purr</Word>
+      <Word>SnipChoose</Word>
+      <Word>SnipCase</Word>
+      <Word>SnipDefault</Word>
+      <Word>BringWarmth</Word>
+      <Word>SqueakNetGet</Word>
+      <Word>Listen</Word>
+      <Word>Brain</Word>
+      <Word>NativeCall</Word>
+      <Word>BeepBoop</Word>
+      <Word>SnuggleObject</Word>
+    </Keywords>
+
+    <Rule color="FunctionCall">
+      \b[a-zA-Z_][a-zA-Z0-9_]*\s*\(
+    </Rule>
+
+    
+    <!-- Numbers -->
+    <Rule color="Number">
+      \b\d+(\.\d+)?\b
+    </Rule>
+
+    <!-- Operators -->
+    <Rule color="Operator">
+      [+\-*/%&lt;&gt;!=^]
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>

@@ -1,0 +1,501 @@
+﻿<Window x:Class="SqueakIDE.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:docking="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:converters="SqueakIDE.Converters"
+        xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
+        mc:Ignorable="d"
+        Title="Squeak IDE" Height="800" Width="1200"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#1E1E1E"
+        BorderThickness="1"
+        BorderBrush="#1E1E1E"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        ResizeMode="CanResizeWithGrip">
+    <WindowChrome.WindowChrome>
+        <WindowChrome 
+            CaptionHeight="0"
+            ResizeBorderThickness="6"
+            CornerRadius="0"
+            GlassFrameThickness="0"/>
+    </WindowChrome.WindowChrome>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}"/>
+    </Window.InputBindings>
+    <Window.Resources>
+        <!-- Window Button Style -->
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#404040"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#303030"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- ScrollBar Style -->
+        <Style TargetType="ScrollBar">
+            <!-- Base size/color settings -->
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="Background" Value="#333333"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <!-- A single Grid that has 3 row definitions and 3 column definitions.
+                     We'll place the up/left button, track, and down/right button in
+                     row/col positions for the *vertical* layout by default. Then triggers
+                     move them into a horizontal layout if needed.
+                -->
+                        <Grid x:Name="MainGrid" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <!-- For vertical layout: top button, middle track, bottom button -->
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <!-- For horizontal layout: left button, track, right button -->
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Top button (VERTICAL default). Commands = LineUp/LineDown for vertical -->
+                            <RepeatButton x:Name="PART_LineUpButton"
+                                  Command="{x:Static ScrollBar.LineUpCommand}"
+                                  Content="˄"
+                                  Width="16" Height="16"
+                                  Background="#444444"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  Grid.Row="0" Grid.Column="0"/>
+
+                            <!-- Middle track (VERTICAL default). -->
+                            <Track x:Name="PART_Track"
+                           Grid.Row="1" Grid.Column="0"
+                           Value="{TemplateBinding Value}"
+                           Minimum="{TemplateBinding Minimum}"
+                           Maximum="{TemplateBinding Maximum}"
+                           ViewportSize="{TemplateBinding ViewportSize}"
+                           Orientation="{TemplateBinding Orientation}" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Background="#666666" 
+                                   Foreground="{TemplateBinding Foreground}"/>
+                                </Track.Thumb>
+                            </Track>
+
+                            <!-- Bottom button (VERTICAL default). -->
+                            <RepeatButton x:Name="PART_LineDownButton"
+                                  Command="{x:Static ScrollBar.LineDownCommand}"
+                                  Content="˅"
+                                  Width="16" Height="16"
+                                  Background="#444444"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  Grid.Row="2" Grid.Column="0"/>
+                        </Grid>
+
+                        <!-- TRIGGERS: If Orientation=Horizontal, swap to horizontal commands & positions -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <!-- 1) Change the commands/content for left/right behavior -->
+                                <Setter TargetName="PART_LineUpButton" Property="Command" Value="{x:Static ScrollBar.LineLeftCommand}" />
+                                <Setter TargetName="PART_LineUpButton" Property="Content" Value="˂" />
+
+                                <Setter TargetName="PART_LineDownButton" Property="Command" Value="{x:Static ScrollBar.LineRightCommand}" />
+                                <Setter TargetName="PART_LineDownButton" Property="Content" Value="˃" />
+
+                                <!-- 2) Move the buttons & track into a single row, separate columns -->
+                                <Setter TargetName="PART_LineUpButton" Property="Grid.Row" Value="0"/>
+                                <Setter TargetName="PART_LineUpButton" Property="Grid.Column" Value="0"/>
+
+                                <Setter TargetName="PART_Track" Property="Grid.Row" Value="0"/>
+                                <Setter TargetName="PART_Track" Property="Grid.Column" Value="1"/>
+                                <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="false"/>
+
+                                <Setter TargetName="PART_LineDownButton" Property="Grid.Row" Value="0"/>
+                                <Setter TargetName="PART_LineDownButton" Property="Grid.Column" Value="2"/>
+
+                                <!-- Optionally set the scrollbar's Height to 16 if it's horizontal -->
+                                <Setter Property="Height" Value="16"/>
+                                <Setter Property="Width" Value="Auto"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TreeView">
+            <Setter Property="Background" Value="#252526" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style TargetType="TreeViewItem">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="14" />
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#444444" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
+            </Style.Resources>
+        </Style>
+
+
+        <!-- Border Style -->
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <SolidColorBrush x:Key="UserMessageBackground" Color="#2C2C2C"/>
+
+    </Window.Resources>
+    <DockPanel Margin="0" Background="#1E1E1E">
+        <!-- Window Control Buttons -->
+        <Grid DockPanel.Dock="Top" Height="30" Background="#2D2D2D" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Window Title -->
+            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" 
+                       Margin="10,0,0,0" 
+                       VerticalAlignment="Center"
+                       Foreground="White"/>
+            
+            <!-- Window Buttons -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Style="{StaticResource WindowButtonStyle}" 
+                        Content="—"
+                        Click="MinimizeButton_Click"/>
+                <Button Style="{StaticResource WindowButtonStyle}" 
+                        Content="☐"
+                        Click="MaximizeButton_Click"/>
+                <Button Style="{StaticResource WindowButtonStyle}" 
+                        Content="✕"
+                        Click="CloseButton_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Toolbar -->
+        <ToolBar DockPanel.Dock="Top" Background="#333333" Foreground="White">
+            <!-- Left-aligned buttons -->
+            <Button Content="Run" Click="RunCode" Background="#444444" Foreground="White" />
+            <ComboBox x:Name="LogLevelComboBox" 
+                    Width="100" 
+                    SelectedIndex="0"
+                    SelectionChanged="LogLevel_SelectionChanged"
+                    Background="#FF404040"
+                    Foreground="White">
+                <ComboBoxItem Background="#FF404040" Foreground="White">Error</ComboBoxItem>
+                <ComboBoxItem Background="#FF404040" Foreground="White">Warning</ComboBoxItem>
+                <ComboBoxItem Background="#FF404040" Foreground="White">Information</ComboBoxItem>
+                <ComboBoxItem Background="#FF404040" Foreground="White">Debug</ComboBoxItem>
+                <ComboBoxItem Background="#FF404040" Foreground="White">Trace</ComboBoxItem>
+            </ComboBox>
+            <Button Content="Open Folder" Click="OpenFolder" Background="#444444" Foreground="White" />
+            <Button Content="New Tab" Click="CreateNewFile" Background="#444444" Foreground="White" />
+            <Button Content="Save As" Click="SaveAs_Click" Background="#444444" Foreground="White" />
+
+            <!-- Git Toolbar -->
+            <Separator />
+            <Button Click="GitLogin_Click" ToolTip="Git Login" Background="#444444">
+                <TextBlock Text="🔑" FontSize="16" Foreground="White"/>
+            </Button>
+            <Button Click="GitCommit_Click" ToolTip="Commit Changes" Background="#444444">
+                <TextBlock Text="📝" FontSize="16" Foreground="White"/>
+            </Button>
+            <Button Click="GitPull_Click" ToolTip="Pull Changes" Background="#444444">
+                <TextBlock Text="⬇️" FontSize="16" Foreground="White"/>
+            </Button>
+            <Button Click="GitPush_Click" ToolTip="Push Changes" Background="#444444">
+                <TextBlock Text="⬆️" FontSize="16" Foreground="White"/>
+            </Button>
+            <ComboBox x:Name="BranchComboBox" 
+                      Width="150"
+                      Background="#FF404040"
+                      Foreground="White"
+                      SelectionChanged="BranchComboBox_SelectionChanged"/>
+
+            <!-- LiveShare Toolbar -->
+            <Separator />
+            <Button Content="Start LiveShare" 
+                    Click="StartLiveShare_Click" 
+                    Background="#444444" 
+                    Foreground="White">
+                <Button.ToolTip>
+                    <ToolTip>Start a new LiveShare session</ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Content="Join LiveShare" 
+                    Click="JoinLiveShare_Click" 
+                    Background="#444444" 
+                    Foreground="White">
+                <Button.ToolTip>
+                    <ToolTip>Join an existing LiveShare session</ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Content="End LiveShare" 
+                    Click="EndLiveShare_Click" 
+                    Background="#444444" 
+                    Foreground="White">
+                <Button.ToolTip>
+                    <ToolTip>End current LiveShare session</ToolTip>
+                </Button.ToolTip>
+            </Button>
+        </ToolBar>
+
+        <!-- Status Bar - Add Height="Auto" -->
+        <StatusBar DockPanel.Dock="Bottom" Background="#FF303030" Height="Auto">
+            <TextBlock x:Name="StatusText" Foreground="White" Text="Ready"/>
+            <Separator/>
+            <TextBlock x:Name="LineColStatus" Foreground="White"/>
+            <Separator/>
+            <TextBlock x:Name="EncodingStatus" Foreground="White"/>
+        </StatusBar>
+
+        <!-- Docking Manager - Make sure it's after the StatusBar -->
+        <avalonDock:DockingManager x:Name="DockingManager" Background="#1E1E1E" Foreground="White">
+            <avalonDock:LayoutRoot>
+                <avalonDock:LayoutPanel Orientation="Horizontal">
+                    <!-- Folder Explorer Panel -->
+                    <avalonDock:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="250">
+                        <avalonDock:LayoutAnchorablePane>
+                            <avalonDock:LayoutAnchorable Title="Folder Explorer">
+                                <TreeView x:Name="FolderExplorer"
+                                          Background="#FF202020"
+                                          Foreground="White"
+                                          SelectedItemChanged="FolderExplorer_SelectedItemChanged"
+                                          Grid.Row="1">
+                                    <TreeView.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Add">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="➕" />
+                                                </MenuItem.Icon>
+                                                <MenuItem Header="New File" Click="AddNewFile_Click">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock Text="📄" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Existing File" Click="AddExistingFile_Click">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock Text="📎" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="New Folder" Click="AddNewFolder_Click">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock Text="📁" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </MenuItem>
+                                            <Separator/>
+                                            <MenuItem Header="Remove from Project" Click="RemoveFromProject_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="❌" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Header="Delete" Click="DeleteFile_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="🗑️" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <Separator/>
+                                            <MenuItem Header="Copy Path" Click="CopyPath_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="📋" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Header="Open in File Explorer" Click="OpenInExplorer_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="📂" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <Separator/>
+                                            <MenuItem Header="Refresh" Click="RefreshProjectExplorer_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="🔄" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </TreeView.ContextMenu>
+                                    <TreeView.Resources>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
+                                                         Color="#FF3F3F46"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                                                         Color="White"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
+                                                         Color="#FF3F3F46"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" 
+                                                         Color="White"/>
+                                    </TreeView.Resources>
+                                </TreeView>
+                            </avalonDock:LayoutAnchorable>
+                        </avalonDock:LayoutAnchorablePane>
+                    </avalonDock:LayoutAnchorablePaneGroup>
+
+                    <!-- Tabbed Editor and Panels -->
+                    <avalonDock:LayoutPanel Orientation="Vertical">
+                        <!-- Tabbed Editor -->
+                        <avalonDock:LayoutDocumentPaneGroup>
+                            <avalonDock:LayoutDocumentPane x:Name="EditorTabs">
+                            </avalonDock:LayoutDocumentPane>
+                        </avalonDock:LayoutDocumentPaneGroup>
+
+                        <!-- Output/Error Panels -->
+                        <avalonDock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="150">
+                            <avalonDock:LayoutAnchorablePane>
+                                <avalonDock:LayoutAnchorable Title="Output">
+                                    <TextBox x:Name="OutputBox"
+                                             FontFamily="Consolas"
+                                             FontSize="14"
+                                             IsReadOnly="True"
+                                             Background="#252526"
+                                             Foreground="White"
+                                             TextWrapping="Wrap"
+                                             VerticalScrollBarVisibility="Auto" />
+                                </avalonDock:LayoutAnchorable>
+                            </avalonDock:LayoutAnchorablePane>
+                            <avalonDock:LayoutAnchorablePane>
+                                <avalonDock:LayoutAnchorable Title="Error List">
+                                    <ListBox x:Name="ErrorList"
+                                             Background="#252526"
+                                             Foreground="White"
+                                             BorderThickness="0"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                </avalonDock:LayoutAnchorable>
+                            </avalonDock:LayoutAnchorablePane>
+                        </avalonDock:LayoutAnchorablePaneGroup>
+
+                        <!-- AI Assistant Panel -->
+                        <avalonDock:LayoutAnchorablePaneGroup Orientation="Vertical">
+                            <avalonDock:LayoutAnchorablePane>
+                                <avalonDock:LayoutAnchorable Title="AI Assistant" 
+                                                            CanHide="True" 
+                                                            CanFloat="True">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <ScrollViewer x:Name="ChatScrollViewer" 
+                                                    Grid.Row="0" 
+                                                    VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl x:Name="ChatMessages" Background="#1E1E1E">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="5" 
+                                                                Padding="10" 
+                                                                Background="#2C2C2C"
+                                                                CornerRadius="5">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Sender}" 
+                                                                        FontWeight="Bold" 
+                                                                        Foreground="#89D185"/>
+                                                                <TextBox Text="{Binding Content}" 
+                                                                         TextWrapping="Wrap" 
+                                                                         Foreground="White"
+                                                                         Background="Transparent"
+                                                                         BorderThickness="0"
+                                                                         IsReadOnly="True"
+                                                                         IsReadOnlyCaretVisible="True"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+
+                                        <Grid Grid.Row="1" Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="MessageInput" 
+                                                    Grid.Column="0"
+                                                    Margin="0,0,5,0"
+                                                    Background="#252526"
+                                                    Foreground="White"
+                                                    AcceptsReturn="True"
+                                                    TextWrapping="Wrap"
+                                                    KeyDown="MessageInput_KeyDown"/>
+                                            <Button Grid.Column="1" 
+                                                    Content="Send"
+                                                    Click="SendMessage_Click"
+                                                    Width="60"
+                                                    Background="#444444"
+                                                    Foreground="White"/>
+                                        </Grid>
+                                    </Grid>
+                                </avalonDock:LayoutAnchorable>
+                            </avalonDock:LayoutAnchorablePane>
+                        </avalonDock:LayoutAnchorablePaneGroup>
+                    </avalonDock:LayoutPanel>
+                </avalonDock:LayoutPanel>
+            </avalonDock:LayoutRoot>
+            <docking:DockingManager.DocumentContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Pin Tab" Click="PinTab_Click" x:Name="PinMenuItem">
+                        <MenuItem.Icon>
+                            <TextBlock Text="📌" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Close" Click="CloseTab_Click">
+                        <MenuItem.Icon>
+                            <TextBlock Text="❌" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Close All But This" Click="CloseAllButThis_Click">
+                        <MenuItem.Icon>
+                            <TextBlock Text="📑" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Close All" Click="CloseAllTabs_Click">
+                        <MenuItem.Icon>
+                            <TextBlock Text="🗑️" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Save" Click="SaveTab_Click">
+                        <MenuItem.Icon>
+                            <TextBlock Text="💾" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save All" Click="SaveAllTabs_Click">
+                        <MenuItem.Icon>
+                            <TextBlock Text="💾" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </docking:DockingManager.DocumentContextMenu>
+        </avalonDock:DockingManager>
+    </DockPanel>
+</Window>
