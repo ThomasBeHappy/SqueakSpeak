@@ -3,6 +3,8 @@
 
 Welcome to SqueakSpeak, the most adorable programming language ever created! 🌈 It's like having an itty-bitty mouse friend who helps you code with tiny paw prints of joy! With our super-duper cozy IDE (that's short for Incredibly Delightful Environment! 🏠), you can have magical coding adventures with all your mouse friends in real-time! Keep all your precious cheese (that's code in mouse language 🧀) organized with our built-in version control system that works like a perfectly organized mouse nest! No more coding alone in the dark - join our squeaky family for the most adorable programming party ever! 🎉
 
+![IDE](image.png)
+
 ## ✨ Magical Features ✨
 
 - **🐭 The Cutest Programming Language Ever**
