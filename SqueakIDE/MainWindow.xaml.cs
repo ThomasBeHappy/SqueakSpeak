@@ -40,6 +40,7 @@ using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Themes;
 using System.Windows.Interop;
 using SqueakIDE.Models;
+using SqueakIDE.Themes;
 
 namespace SqueakIDE
 {
@@ -107,11 +108,13 @@ namespace SqueakIDE
                 _defaultLeft = Left;
                 _defaultTop = Top;
             };
+            InitializeThemeMenu();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeLoggerFactory();
+            InitializeThemeMenu();
         }
 
         private void InitializeLoggerFactory()
@@ -264,7 +267,8 @@ namespace SqueakIDE
             return new TreeViewItem
             {
                 Header = file.Name,
-                Tag = file.FullName
+                Tag = file.FullName,
+                Foreground = new SolidColorBrush(ThemeManager.Instance.CurrentTheme.ForegroundColor),
             };
         }
 
@@ -335,14 +339,15 @@ namespace SqueakIDE
 
         private ICSharpCode.AvalonEdit.TextEditor CreateConfiguredEditor(string content)
         {
+            var theme = ThemeManager.Instance.CurrentTheme;
             var editor = new ICSharpCode.AvalonEdit.TextEditor
             {
                 FontFamily = new FontFamily("Consolas"),
                 FontSize = 14,
                 ShowLineNumbers = true,
-                Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
-                Foreground = Brushes.White,
-                LineNumbersForeground = Brushes.Gray,
+                Background = new SolidColorBrush(theme.EditorBackground),
+                Foreground = new SolidColorBrush(theme.EditorText),
+                LineNumbersForeground = new SolidColorBrush(theme.EditorLineNumbers),
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Text = content,
                 IsModified = false
@@ -375,11 +380,21 @@ namespace SqueakIDE
 
         private void ConfigureSyntaxHighlighting(ICSharpCode.AvalonEdit.TextEditor editor)
         {
+            var theme = ThemeManager.Instance.CurrentTheme;
             var assembly = Assembly.GetExecutingAssembly();
             using (var stream = assembly.GetManifestResourceStream("SqueakIDE.SqueakHighlighting.xshd"))
             using (var reader = XmlReader.Create(stream))
             {
-                editor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                var highlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                
+                // Update colors based on theme
+                highlighting.GetNamedColor("Keyword").Foreground = new SimpleHighlightingBrush(theme.KeywordColor);
+                highlighting.GetNamedColor("String").Foreground = new SimpleHighlightingBrush(theme.StringColor);
+                highlighting.GetNamedColor("Number").Foreground = new SimpleHighlightingBrush(theme.NumberColor);
+                highlighting.GetNamedColor("Comment").Foreground = new SimpleHighlightingBrush(theme.CommentColor);
+                highlighting.GetNamedColor("Operator").Foreground = new SimpleHighlightingBrush(theme.OperatorColor);
+                highlighting.GetNamedColor("FunctionCall").Foreground = new SimpleHighlightingBrush(theme.EditorText);
+                editor.SyntaxHighlighting = highlighting;
             }
         }
 
@@ -1898,5 +1913,147 @@ namespace SqueakIDE
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        private void InitializeThemeMenu()
+        {
+            UpdateCustomThemesMenu();
+            ThemeManager.Instance.ApplyTheme("OceanDepths"); // Default theme
+        }
+
+        private void UpdateCustomThemesMenu()
+        {
+            CustomThemesMenu.Items.Clear();
+            var themes = ThemeManager.Instance.GetCustomThemes();
+            
+            foreach (var theme in themes)
+            {
+                var menuItem = new MenuItem
+                {
+                    Header = theme.Name,
+                    Tag = theme.Name
+                };
+                menuItem.Click += Theme_Click;
+                CustomThemesMenu.Items.Add(menuItem);
+            }
+        }
+
+        private void Theme_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                string themeName = menuItem.Tag.ToString();
+                ThemeManager.Instance.ApplyTheme(themeName);
+                RefreshOpenEditors();
+                RefreshTreeViewTheme();
+            }
+        }
+
+        private void RefreshTreeViewTheme()
+        {
+            var theme = ThemeManager.Instance.CurrentTheme;
+            
+            // Set TreeView colors
+            FolderExplorer.Background = new SolidColorBrush(theme.PrimaryBackground);
+            FolderExplorer.Foreground = new SolidColorBrush(theme.ForegroundColor);
+            
+            // Clear and reapply ItemContainerStyle to force update
+            var style = new Style(typeof(TreeViewItem));
+            style.Setters.Add(new Setter(TreeViewItem.BackgroundProperty, new SolidColorBrush(theme.PrimaryBackground)));
+            style.Setters.Add(new Setter(TreeViewItem.ForegroundProperty, new SolidColorBrush(theme.ForegroundColor)));
+            FolderExplorer.ItemContainerStyle = style;
+            
+            // Force visual refresh
+            FolderExplorer.Items.Refresh();
+        }
+
+        private void CreateTheme_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ThemeEditorDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                UpdateCustomThemesMenu();
+            }
+        }
+
+        private void EditTheme_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ThemeEditorDialog(ThemeManager.Instance.CurrentTheme);
+            if (dialog.ShowDialog() == true)
+            {
+                UpdateCustomThemesMenu();
+                ThemeManager.Instance.ApplyTheme(ThemeManager.Instance.CurrentTheme.Name);
+                RefreshOpenEditors();
+            }
+        }
+
+        private void UpdateEditorTheme()
+        {
+            var theme = ThemeManager.Instance.CurrentTheme;
+            foreach (var doc in EditorTabs.Children.OfType<LayoutDocument>())
+            {
+                if (doc.Content is ICSharpCode.AvalonEdit.TextEditor editor)
+                {
+                    editor.Background = new SolidColorBrush(theme.EditorBackground);
+                    editor.Foreground = new SolidColorBrush(theme.EditorText);
+                    editor.TextArea.TextView.CurrentLineBackground = 
+                        new SolidColorBrush(theme.EditorCurrentLine);
+
+                    // Update syntax highlighting
+                    UpdateSyntaxHighlighting(editor.SyntaxHighlighting, theme);
+                    editor.TextArea.TextView.Redraw();
+                }
+            }
+        }
+
+        private void UpdateSyntaxHighlighting(IHighlightingDefinition highlighting, Themes.Theme theme)
+        {
+            foreach (var color in highlighting.NamedHighlightingColors)
+            {
+                switch (color.Name)
+                {
+                    case "Comment":
+                        color.Foreground = new SimpleHighlightingBrush(theme.CommentColor);
+                        break;
+                    case "String":
+                        color.Foreground = new SimpleHighlightingBrush(theme.StringColor);
+                        break;
+                    case "Keyword":
+                        color.Foreground = new SimpleHighlightingBrush(theme.KeywordColor);
+                        break;
+                    case "Number":
+                        color.Foreground = new SimpleHighlightingBrush(theme.NumberColor);
+                        break;
+                    case "Operator":
+                        color.Foreground = new SimpleHighlightingBrush(theme.OperatorColor);
+                        break;
+                }
+            }
+        }
+
+        private void ThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button != null)
+            {
+                ThemesPopup.IsOpen = !ThemesPopup.IsOpen;
+            }
+        }
+
+        private void DeleteTheme_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && 
+                menuItem.Parent is ContextMenu contextMenu && 
+                contextMenu.PlacementTarget is MenuItem themeMenuItem)
+            {
+                string themeName = themeMenuItem.Tag?.ToString() ?? themeMenuItem.Header.ToString();
+                ThemeManager.Instance.DeleteTheme(themeName);
+                UpdateCustomThemesMenu();
+            }
+        }
+
+        private void RefreshOpenEditors()
+        {
+            UpdateEditorTheme();
+        }
     }
 }

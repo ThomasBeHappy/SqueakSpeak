@@ -1,4 +1,4 @@
-// Generated from e:/Projects/Squeak/Grammar/SqueakSpeak.g4 by ANTLR 4.13.1
+// Generated from e:/Projects/SqueakLanguage/Squeak/Grammar/SqueakSpeak.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

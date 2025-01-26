@@ -12,9 +12,9 @@
         Title="Squeak IDE" Height="800" Width="1200"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#1E1E1E"
+        Background="{DynamicResource BackgroundBrush}"
         BorderThickness="1"
-        BorderBrush="#1E1E1E"
+        BorderBrush="{DynamicResource BorderBrush}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
         ResizeMode="CanResizeWithGrip">
@@ -35,7 +35,7 @@
             <Setter Property="Height" Value="30"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -48,10 +48,10 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#404040"/>
+                    <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#303030"/>
+                    <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -60,8 +60,8 @@
         <Style TargetType="ScrollBar">
             <!-- Base size/color settings -->
             <Setter Property="Width" Value="16"/>
-            <Setter Property="Foreground" Value="#AAAAAA"/>
-            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -90,7 +90,7 @@
                                   Command="{x:Static ScrollBar.LineUpCommand}"
                                   Content="˄"
                                   Width="16" Height="16"
-                                  Background="#444444"
+                                  Background="{DynamicResource BorderBrush}"
                                   Foreground="{TemplateBinding Foreground}"
                                   Grid.Row="0" Grid.Column="0"/>
 
@@ -103,7 +103,7 @@
                            ViewportSize="{TemplateBinding ViewportSize}"
                            Orientation="{TemplateBinding Orientation}" IsDirectionReversed="True">
                                 <Track.Thumb>
-                                    <Thumb Background="#666666" 
+                                    <Thumb Background="{DynamicResource HighlightBrush}" 
                                    Foreground="{TemplateBinding Foreground}"/>
                                 </Track.Thumb>
                             </Track>
@@ -113,7 +113,7 @@
                                   Command="{x:Static ScrollBar.LineDownCommand}"
                                   Content="˅"
                                   Width="16" Height="16"
-                                  Background="#444444"
+                                  Background="{DynamicResource BorderBrush}"
                                   Foreground="{TemplateBinding Foreground}"
                                   Grid.Row="2" Grid.Column="0"/>
                         </Grid>
@@ -149,35 +149,41 @@
             </Setter>
         </Style>
         <Style TargetType="TreeView">
-            <Setter Property="Background" Value="#252526" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style TargetType="TreeViewItem">
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="FontFamily" Value="Consolas" />
             <Setter Property="FontSize" Value="14" />
             <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#444444" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
+                                Color="{DynamicResource HighlightColor}"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                                Color="{DynamicResource ForegroundColor}"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
+                                Color="{DynamicResource HighlightColor}"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" 
+                                Color="{DynamicResource ForegroundColor}"/>
             </Style.Resources>
         </Style>
 
 
         <!-- Border Style -->
         <Style TargetType="Border">
-            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
-        <SolidColorBrush x:Key="UserMessageBackground" Color="#2C2C2C"/>
+        <SolidColorBrush x:Key="UserMessageBackground" Color="{Binding Color, Source={DynamicResource BackgroundBrush}}"/>
 
     </Window.Resources>
-    <DockPanel Margin="0" Background="#1E1E1E">
+    <DockPanel Margin="0" Background="{DynamicResource BackgroundBrush}">
         <!-- Window Control Buttons -->
-        <Grid DockPanel.Dock="Top" Height="30" Background="#2D2D2D" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" Margin="0">
+        <Grid DockPanel.Dock="Top" Height="30" Background="{DynamicResource BackgroundBrush}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -187,7 +193,7 @@
             <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" 
                        Margin="10,0,0,0" 
                        VerticalAlignment="Center"
-                       Foreground="White"/>
+                       Foreground="{DynamicResource ForegroundBrush}"/>
             
             <!-- Window Buttons -->
             <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -204,84 +210,146 @@
         </Grid>
 
         <!-- Main Toolbar -->
-        <ToolBar DockPanel.Dock="Top" Background="#333333" Foreground="White">
+        <ToolBar DockPanel.Dock="Top" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">
             <!-- Left-aligned buttons -->
-            <Button Content="Run" Click="RunCode" Background="#444444" Foreground="White" />
+            <Button Content="Run" Click="RunCode" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
             <ComboBox x:Name="LogLevelComboBox" 
                     Width="100" 
                     SelectedIndex="0"
                     SelectionChanged="LogLevel_SelectionChanged"
-                    Background="#FF404040"
-                    Foreground="White">
-                <ComboBoxItem Background="#FF404040" Foreground="White">Error</ComboBoxItem>
-                <ComboBoxItem Background="#FF404040" Foreground="White">Warning</ComboBoxItem>
-                <ComboBoxItem Background="#FF404040" Foreground="White">Information</ComboBoxItem>
-                <ComboBoxItem Background="#FF404040" Foreground="White">Debug</ComboBoxItem>
-                <ComboBoxItem Background="#FF404040" Foreground="White">Trace</ComboBoxItem>
+                    Background="{DynamicResource BackgroundBrush}"
+                    Foreground="{DynamicResource ForegroundBrush}">
+                <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Error</ComboBoxItem>
+                <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Warning</ComboBoxItem>
+                <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Information</ComboBoxItem>
+                <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Debug</ComboBoxItem>
+                <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Trace</ComboBoxItem>
             </ComboBox>
-            <Button Content="Open Folder" Click="OpenFolder" Background="#444444" Foreground="White" />
-            <Button Content="New Tab" Click="CreateNewFile" Background="#444444" Foreground="White" />
-            <Button Content="Save As" Click="SaveAs_Click" Background="#444444" Foreground="White" />
+            <Button Content="Open Folder" Click="OpenFolder" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
+            <Button Content="New Tab" Click="CreateNewFile" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
+            <Button Content="Save As" Click="SaveAs_Click" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
 
             <!-- Git Toolbar -->
             <Separator />
-            <Button Click="GitLogin_Click" ToolTip="Git Login" Background="#444444">
-                <TextBlock Text="🔑" FontSize="16" Foreground="White"/>
+            <Button Click="GitLogin_Click" ToolTip="Git Login" Background="{DynamicResource BorderBrush}">
+                <TextBlock Text="🔑" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
             </Button>
-            <Button Click="GitCommit_Click" ToolTip="Commit Changes" Background="#444444">
-                <TextBlock Text="📝" FontSize="16" Foreground="White"/>
+            <Button Click="GitCommit_Click" ToolTip="Commit Changes" Background="{DynamicResource BorderBrush}">
+                <TextBlock Text="📝" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
             </Button>
-            <Button Click="GitPull_Click" ToolTip="Pull Changes" Background="#444444">
-                <TextBlock Text="⬇️" FontSize="16" Foreground="White"/>
+            <Button Click="GitPull_Click" ToolTip="Pull Changes" Background="{DynamicResource BorderBrush}">
+                <TextBlock Text="⬇️" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
             </Button>
-            <Button Click="GitPush_Click" ToolTip="Push Changes" Background="#444444">
-                <TextBlock Text="⬆️" FontSize="16" Foreground="White"/>
+            <Button Click="GitPush_Click" ToolTip="Push Changes" Background="{DynamicResource BorderBrush}">
+                <TextBlock Text="⬆️" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
             </Button>
             <ComboBox x:Name="BranchComboBox" 
                       Width="150"
-                      Background="#FF404040"
-                      Foreground="White"
+                      Background="{DynamicResource BackgroundBrush}"
+                      Foreground="{DynamicResource ForegroundBrush}"
                       SelectionChanged="BranchComboBox_SelectionChanged"/>
 
             <!-- LiveShare Toolbar -->
             <Separator />
             <Button Content="Start LiveShare" 
                     Click="StartLiveShare_Click" 
-                    Background="#444444" 
-                    Foreground="White">
+                    Background="{DynamicResource BorderBrush}" 
+                    Foreground="{DynamicResource ForegroundBrush}">
                 <Button.ToolTip>
                     <ToolTip>Start a new LiveShare session</ToolTip>
                 </Button.ToolTip>
             </Button>
             <Button Content="Join LiveShare" 
                     Click="JoinLiveShare_Click" 
-                    Background="#444444" 
-                    Foreground="White">
+                    Background="{DynamicResource BorderBrush}" 
+                    Foreground="{DynamicResource ForegroundBrush}">
                 <Button.ToolTip>
                     <ToolTip>Join an existing LiveShare session</ToolTip>
                 </Button.ToolTip>
             </Button>
             <Button Content="End LiveShare" 
                     Click="EndLiveShare_Click" 
-                    Background="#444444" 
-                    Foreground="White">
+                    Background="{DynamicResource BorderBrush}" 
+                    Foreground="{DynamicResource ForegroundBrush}">
                 <Button.ToolTip>
                     <ToolTip>End current LiveShare session</ToolTip>
                 </Button.ToolTip>
             </Button>
+
+            <!-- Themes Menu -->
+            <Separator />
+            <Button x:Name="ThemeButton" Background="{DynamicResource BackgroundBrush}" Click="ThemeButton_Click">
+                <Button.Content>
+                    <TextBlock Text="🎨" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
+                </Button.Content>
+            </Button>
+            <Popup x:Name="ThemesPopup" 
+                   StaysOpen="False" 
+                   Placement="Bottom" 
+                   PlacementTarget="{Binding ElementName=ThemeButton}"
+                   AllowsTransparency="True">
+                <Border Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <Menu Background="Transparent">
+                        <Menu.Resources>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="Separator">
+                                <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+                            </Style>
+                        </Menu.Resources>
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <MenuItem Header="Themes">
+                            <MenuItem.Items>
+                                <MenuItem Header="CozyDark" Click="Theme_Click" Tag="CozyDark"/>
+                                <MenuItem Header="CheeseCave" Click="Theme_Click" Tag="CheeseCave"/>
+                                <MenuItem Header="Ocean Depths" Click="Theme_Click" Tag="OceanDepths"/>
+                                <MenuItem Header="Forest Canopy" Click="Theme_Click" Tag="ForestCanopy"/>
+                                <Separator/>
+                                <MenuItem Header="Custom Themes" Name="CustomThemesMenu">
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Delete" Click="DeleteTheme_Click"/>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                                <MenuItem Header="Create New Theme..." Click="CreateTheme_Click"/>
+                                <MenuItem Header="Edit Current Theme..." Click="EditTheme_Click"/>
+                            </MenuItem.Items>
+                        </MenuItem>
+                    </Menu>
+                </Border>
+            </Popup>
         </ToolBar>
 
         <!-- Status Bar - Add Height="Auto" -->
-        <StatusBar DockPanel.Dock="Bottom" Background="#FF303030" Height="Auto">
-            <TextBlock x:Name="StatusText" Foreground="White" Text="Ready"/>
+        <StatusBar DockPanel.Dock="Bottom" Background="{DynamicResource BackgroundBrush}" Height="Auto">
+            <TextBlock x:Name="StatusText" Foreground="{DynamicResource ForegroundBrush}" Text="Ready"/>
             <Separator/>
-            <TextBlock x:Name="LineColStatus" Foreground="White"/>
+            <TextBlock x:Name="LineColStatus" Foreground="{DynamicResource ForegroundBrush}"/>
             <Separator/>
-            <TextBlock x:Name="EncodingStatus" Foreground="White"/>
+            <TextBlock x:Name="EncodingStatus" Foreground="{DynamicResource ForegroundBrush}"/>
         </StatusBar>
 
         <!-- Docking Manager - Make sure it's after the StatusBar -->
-        <avalonDock:DockingManager x:Name="DockingManager" Background="#1E1E1E" Foreground="White">
+        <avalonDock:DockingManager x:Name="DockingManager" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel Orientation="Horizontal">
                     <!-- Folder Explorer Panel -->
@@ -289,8 +357,8 @@
                         <avalonDock:LayoutAnchorablePane>
                             <avalonDock:LayoutAnchorable Title="Folder Explorer">
                                 <TreeView x:Name="FolderExplorer"
-                                          Background="#FF202020"
-                                          Foreground="White"
+                                          Background="{DynamicResource BackgroundBrush}"
+                                          Foreground="{DynamicResource ForegroundBrush}"
                                           SelectedItemChanged="FolderExplorer_SelectedItemChanged"
                                           Grid.Row="1">
                                     <TreeView.ContextMenu>
@@ -347,13 +415,13 @@
                                     </TreeView.ContextMenu>
                                     <TreeView.Resources>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
-                                                         Color="#FF3F3F46"/>
+                                                         Color="{DynamicResource HighlightColor}"/>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
-                                                         Color="White"/>
+                                                         Color="{DynamicResource ForegroundColor}"/>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
-                                                         Color="#FF3F3F46"/>
+                                                         Color="{DynamicResource HighlightColor}"/>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" 
-                                                         Color="White"/>
+                                                         Color="{DynamicResource ForegroundColor}"/>
                                     </TreeView.Resources>
                                 </TreeView>
                             </avalonDock:LayoutAnchorable>
@@ -376,8 +444,8 @@
                                              FontFamily="Consolas"
                                              FontSize="14"
                                              IsReadOnly="True"
-                                             Background="#252526"
-                                             Foreground="White"
+                                             Background="{DynamicResource BackgroundBrush}"
+                                             Foreground="{DynamicResource ForegroundBrush}"
                                              TextWrapping="Wrap"
                                              VerticalScrollBarVisibility="Auto" />
                                 </avalonDock:LayoutAnchorable>
@@ -385,8 +453,8 @@
                             <avalonDock:LayoutAnchorablePane>
                                 <avalonDock:LayoutAnchorable Title="Error List">
                                     <ListBox x:Name="ErrorList"
-                                             Background="#252526"
-                                             Foreground="White"
+                                             Background="{DynamicResource BackgroundBrush}"
+                                             Foreground="{DynamicResource ForegroundBrush}"
                                              BorderThickness="0"
                                              ScrollViewer.VerticalScrollBarVisibility="Auto" />
                                 </avalonDock:LayoutAnchorable>
@@ -408,20 +476,20 @@
                                         <ScrollViewer x:Name="ChatScrollViewer" 
                                                     Grid.Row="0" 
                                                     VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl x:Name="ChatMessages" Background="#1E1E1E">
+                                            <ItemsControl x:Name="ChatMessages" Background="{DynamicResource BackgroundBrush}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <Border Margin="5" 
                                                                 Padding="10" 
-                                                                Background="#2C2C2C"
+                                                                Background="{DynamicResource BackgroundBrush}"
                                                                 CornerRadius="5">
                                                             <StackPanel>
                                                                 <TextBlock Text="{Binding Sender}" 
                                                                         FontWeight="Bold" 
-                                                                        Foreground="#89D185"/>
+                                                                        Foreground="{DynamicResource ForegroundBrush}"/>
                                                                 <TextBox Text="{Binding Content}" 
                                                                          TextWrapping="Wrap" 
-                                                                         Foreground="White"
+                                                                         Foreground="{DynamicResource ForegroundBrush}"
                                                                          Background="Transparent"
                                                                          BorderThickness="0"
                                                                          IsReadOnly="True"
@@ -441,8 +509,8 @@
                                             <TextBox x:Name="MessageInput" 
                                                     Grid.Column="0"
                                                     Margin="0,0,5,0"
-                                                    Background="#252526"
-                                                    Foreground="White"
+                                                    Background="{DynamicResource BackgroundBrush}"
+                                                    Foreground="{DynamicResource ForegroundBrush}"
                                                     AcceptsReturn="True"
                                                     TextWrapping="Wrap"
                                                     KeyDown="MessageInput_KeyDown"/>
@@ -450,8 +518,8 @@
                                                     Content="Send"
                                                     Click="SendMessage_Click"
                                                     Width="60"
-                                                    Background="#444444"
-                                                    Foreground="White"/>
+                                                    Background="{DynamicResource BorderBrush}"
+                                                    Foreground="{DynamicResource ForegroundBrush}"/>
                                         </Grid>
                                     </Grid>
                                 </avalonDock:LayoutAnchorable>

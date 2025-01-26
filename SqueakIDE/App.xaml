@@ -3,5 +3,78 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SqueakIDE">
     <Application.Resources>
+        <ResourceDictionary>
+            <!-- Theme Colors - These will be overwritten by ThemeManager -->
+            <SolidColorBrush x:Key="BackgroundBrush" Color="#1E1E1E"/>
+            <SolidColorBrush x:Key="ForegroundBrush" Color="#DCDCDC"/>
+            <SolidColorBrush x:Key="BorderBrush" Color="#2D2D2D"/>
+            <SolidColorBrush x:Key="HighlightBrush" Color="#89D185"/>
+            <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#2D2D2D"/>
+            <SolidColorBrush x:Key="ButtonForegroundBrush" Color="#DCDCDC"/>
+            <SolidColorBrush x:Key="ButtonHoverBrush" Color="#3D3D3D"/>
+            <SolidColorBrush x:Key="ButtonPressedBrush" Color="#4D4D4D"/>
+            <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#1E1E1E"/>
+            <SolidColorBrush x:Key="MenuForegroundBrush" Color="#DCDCDC"/>
+            <SolidColorBrush x:Key="MenuItemForegroundBrush" Color="#DCDCDC"/>
+
+            <!-- Button Styles -->
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Toolbar Image Button Style -->
+            <Style TargetType="Button" x:Key="ToolbarImageButton">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <Image Source="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Menu Styles -->
+            <Style TargetType="MenuItem">
+                <Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}"/>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
