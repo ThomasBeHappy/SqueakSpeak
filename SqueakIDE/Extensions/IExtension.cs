@@ -1,9 +1,9 @@
+using System;
 using SqueakIDE;
 using SqueakIDE.Extensions;
 using System;
 
 namespace SqueakIDE.Extensions;
-
 public interface IExtension
 {
     string Name { get; }
