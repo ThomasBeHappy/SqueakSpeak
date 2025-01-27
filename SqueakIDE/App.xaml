@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:SqueakIDE">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- Theme Colors - These will be overwritten by ThemeManager -->
+            <!-- Theme Brushes -->
             <SolidColorBrush x:Key="BackgroundBrush" Color="#1E1E1E"/>
             <SolidColorBrush x:Key="ForegroundBrush" Color="#DCDCDC"/>
             <SolidColorBrush x:Key="BorderBrush" Color="#2D2D2D"/>
@@ -16,10 +16,19 @@
             <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#1E1E1E"/>
             <SolidColorBrush x:Key="MenuForegroundBrush" Color="#DCDCDC"/>
             <SolidColorBrush x:Key="MenuItemForegroundBrush" Color="#DCDCDC"/>
+            <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#2D2D2D"/>
+            <SolidColorBrush x:Key="TertiaryBackgroundBrush" Color="#323232"/>
+            <SolidColorBrush x:Key="InputBackgroundBrush" Color="#282828"/>
+            <SolidColorBrush x:Key="HoverBackgroundBrush" Color="#3C3C3C"/>
+            <SolidColorBrush x:Key="SelectionBackgroundBrush" Color="#465846"/>
+            <SolidColorBrush x:Key="ActiveBackgroundBrush" Color="#373737"/>
+            <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#232323"/>
+            <SolidColorBrush x:Key="HoverForegroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="ActiveForegroundBrush" Color="#FFFFFF"/>
 
             <!-- Button Styles -->
             <Style TargetType="Button">
-                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
                 <Setter Property="Template">
@@ -33,10 +42,10 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                                    <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                                    <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrush}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -61,9 +70,11 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundBrush}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -73,7 +84,14 @@
 
             <!-- Menu Styles -->
             <Style TargetType="MenuItem">
+                <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <!-- Modern Window Style -->
@@ -99,9 +117,11 @@
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundBrush}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -206,11 +226,25 @@
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
                     </Trigger>
                     <Trigger Property="IsPressed" Value="True">
                         <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundBrush}"/>
                     </Trigger>
                 </Style.Triggers>
+            </Style>
+
+            <!-- Update existing styles to use new brushes -->
+            <Style TargetType="ComboBox">
+                <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                <!-- ... rest of ComboBox style ... -->
+            </Style>
+
+            <Style TargetType="TreeView">
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                <!-- ... rest of TreeView style ... -->
             </Style>
         </ResourceDictionary>
     </Application.Resources>

@@ -39,53 +39,69 @@
         <!-- Color Editors -->
         <ScrollViewer Grid.Row="1">
             <StackPanel>
-                <GroupBox Header="Main Colors" Margin="0,0,0,10" Foreground="White">
+                <GroupBox Header="Main Colors" Margin="0,0,0,10" 
+                          Foreground="{DynamicResource ForegroundBrush}">
                     <StackPanel>
-                        <Label Content="Primary Background" Foreground="White"/>
+                        <Label Content="Primary Background" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="PrimaryBackgroundPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Secondary Background" Foreground="White"/>
+                        <Label Content="Secondary Background" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="SecondaryBackgroundPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Accent Color" Foreground="White"/>
+                        <Label Content="Accent Color" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="AccentColorPicker" Margin="0,0,0,5"/>
                     </StackPanel>
                 </GroupBox>
 
-                <GroupBox Header="Editor Colors" Margin="0,0,0,10" Foreground="White">
+                <GroupBox Header="Editor Colors" Margin="0,0,0,10" 
+                          Foreground="{DynamicResource ForegroundBrush}">
                     <StackPanel>
-                        <Label Content="Editor Background" Foreground="White"/>
+                        <Label Content="Editor Background" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="EditorBackgroundPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Editor Text" Foreground="White"/>
+                        <Label Content="Editor Text" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="EditorTextPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Line Numbers" Foreground="White"/>
+                        <Label Content="Line Numbers" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="LineNumbersPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Current Line" Foreground="White"/>
+                        <Label Content="Current Line" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="CurrentLinePicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Selection" Foreground="White"/>
+                        <Label Content="Selection" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="SelectionPicker" Margin="0,0,0,5"/>
                     </StackPanel>
                 </GroupBox>
 
-                <GroupBox Header="Syntax Colors" Margin="0,0,0,10" Foreground="White">
+                <GroupBox Header="Syntax Colors" Margin="0,0,0,10" 
+                          Foreground="{DynamicResource ForegroundBrush}">
                     <StackPanel>
-                        <Label Content="Keywords" Foreground="White"/>
+                        <Label Content="Keywords" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="KeywordColorPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Strings" Foreground="White"/>
+                        <Label Content="Strings" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="StringColorPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Comments" Foreground="White"/>
+                        <Label Content="Comments" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="CommentColorPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Numbers" Foreground="White"/>
+                        <Label Content="Numbers" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="NumberColorPicker" Margin="0,0,0,5"/>
                         
-                        <Label Content="Operators" Foreground="White"/>
+                        <Label Content="Operators" 
+                               Foreground="{DynamicResource ForegroundBrush}"/>
                         <xctk:ColorPicker x:Name="OperatorColorPicker" Margin="0,0,0,5"/>
                     </StackPanel>
                 </GroupBox>

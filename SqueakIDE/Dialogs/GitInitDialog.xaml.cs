@@ -1,9 +1,10 @@
+using SqueakIDE.Windows;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace SqueakIDE.Dialogs;
-public partial class GitInitDialog : Window
+public partial class GitInitDialog : ModernWindow
 {
     public bool IsClone => RepoTypeComboBox.SelectedIndex == 0;
     public string CloneUrl => CloneUrlBox.Text;

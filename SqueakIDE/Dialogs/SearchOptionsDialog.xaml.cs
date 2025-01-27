@@ -1,7 +1,8 @@
+using SqueakIDE.Windows;
 using System.Windows;
 
 namespace SqueakIDE.Dialogs;
-public partial class SearchOptionsDialog : Window
+public partial class SearchOptionsDialog : ModernWindow
 {
     public SearchOptions Options { get; private set; }
 

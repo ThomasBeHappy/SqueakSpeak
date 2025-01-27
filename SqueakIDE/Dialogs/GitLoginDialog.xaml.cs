@@ -1,9 +1,10 @@
+using SqueakIDE.Windows;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace SqueakIDE.Dialogs;
-public partial class GitLoginDialog : Window
+public partial class GitLoginDialog : ModernWindow
 {
     public string Username { get; private set; }
     public string Email { get; private set; }

@@ -1,8 +1,9 @@
 using System.Windows;
+using SqueakIDE.Windows;
 
 namespace SqueakIDE.Dialogs
 {
-    public partial class LiveShareJoinDialog : Window
+    public partial class LiveShareJoinDialog : ModernWindow
     {
         public string SessionUrl => SessionUrlTextBox.Text;
 

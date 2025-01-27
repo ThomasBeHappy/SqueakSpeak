@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace SqueakIDE.Windows
 {
-    public partial class StartupWindow : Window
+    public partial class StartupWindow : ModernWindow
     {
         public class RecentProject
         {

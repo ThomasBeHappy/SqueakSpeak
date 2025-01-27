@@ -6,16 +6,17 @@
         Title="LiveShare Session Created" 
         Height="200" Width="500"
         WindowStartupLocation="CenterOwner"
-        Background="#1E1E1E">
+        Style="{StaticResource ModernWindowStyle}"
+        Background="{DynamicResource BackgroundBrush}">
     <StackPanel Margin="20">
         <TextBlock Text="Share this URL with others to join the session:" 
-                   Foreground="White" 
+                   Foreground="{DynamicResource ForegroundBrush}" 
                    Margin="0,0,0,10"
                    TextWrapping="Wrap"/>
         <TextBox x:Name="LinkTextBox"
                  IsReadOnly="True"
-                 Background="#252526"
-                 Foreground="White"
+                 Background="{DynamicResource ButtonBackgroundBrush}"
+                 Foreground="{DynamicResource ForegroundBrush}"
                  Padding="5"
                  Margin="0,0,0,15"
                  TextWrapping="Wrap"/>
@@ -27,8 +28,8 @@
                     Width="100"
                     Height="30"
                     Margin="0,0,10,0"
-                    Background="#444444"
-                    Foreground="White">
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}">
                 <Button.ToolTip>
                     <ToolTip>Copy link to clipboard</ToolTip>
                 </Button.ToolTip>
@@ -37,8 +38,8 @@
                     Click="CloseButton_Click"
                     Width="100"
                     Height="30"
-                    Background="#444444"
-                    Foreground="White"/>
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"/>
         </StackPanel>
     </StackPanel>
-</local:ModernWindow> 
+</local:ModernWindow>

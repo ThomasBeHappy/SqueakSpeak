@@ -5,7 +5,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Title}" Height="150" Width="300"
         WindowStartupLocation="CenterOwner"
-        Background="#FF202020">
+        Style="{StaticResource ModernWindowStyle}"
+        Background="{DynamicResource BackgroundBrush}">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,14 +15,14 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="{Binding Prompt}" 
-                   Foreground="White" 
+                   Foreground="{DynamicResource ForegroundBrush}"
                    Margin="0,0,0,10"/>
         
         <TextBox x:Name="InputBox" 
                  Grid.Row="1" 
-                 Background="#FF303030"
-                 Foreground="White"
-                 BorderBrush="#FF404040"/>
+                 Background="{DynamicResource ButtonBackgroundBrush}"
+                 Foreground="{DynamicResource ButtonForegroundBrush}"
+                 BorderBrush="{DynamicResource BorderBrush}"/>
         
         <StackPanel Grid.Row="2" 
                     Orientation="Horizontal" 
@@ -30,14 +31,14 @@
             <Button Content="OK" 
                     Width="70" 
                     Click="OkButton_Click"
-                    Background="#FF303030"
-                    Foreground="White"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
                     Margin="0,0,10,0"/>
             <Button Content="Cancel" 
                     Width="70" 
                     Click="CancelButton_Click"
-                    Background="#FF303030"
-                    Foreground="White"/>
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"/>
         </StackPanel>
     </Grid>
-</local:ModernWindow> 
+</local:ModernWindow>

@@ -6,17 +6,18 @@
         Title="AI Code Assistant" 
         Height="300" Width="500"
         WindowStartupLocation="CenterOwner"
-        Background="#1E1E1E">
+        Style="{StaticResource ModernWindowStyle}"
+        Background="{DynamicResource BackgroundBrush}">
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="#444444"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                                BorderBrush="#555555"
+                                BorderBrush="{DynamicResource BorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="3">
                             <ContentPresenter HorizontalAlignment="Center" 
@@ -27,15 +28,15 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#555555"/>
+                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style TargetType="TextBox">
-            <Setter Property="Background" Value="#252526"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Template">
@@ -62,7 +63,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Selected Code Context:" 
-                 Foreground="White" 
+                 Foreground="{DynamicResource ForegroundBrush}" 
                  Margin="0,0,0,5"/>
         
         <TextBox Grid.Row="1" 
@@ -71,7 +72,10 @@
                  Margin="0,0,0,10"
                  TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Auto"
-                 FontFamily="Consolas"/>
+                 FontFamily="Consolas"
+                 Background="{DynamicResource ButtonBackgroundBrush}"
+                 Foreground="{DynamicResource ButtonForegroundBrush}"
+                 BorderBrush="{DynamicResource BorderBrush}"/>
 
         <TextBox Grid.Row="2" 
                  x:Name="PromptBox"
@@ -80,7 +84,10 @@
                  TextWrapping="Wrap"
                  AcceptsReturn="True"
                  VerticalScrollBarVisibility="Auto"
-                 FontFamily="Segoe UI"/>
+                 FontFamily="Segoe UI"
+                 Background="{DynamicResource ButtonBackgroundBrush}"
+                 Foreground="{DynamicResource ButtonForegroundBrush}"
+                 BorderBrush="{DynamicResource BorderBrush}"/>
 
         <StackPanel Grid.Row="3" 
                     Orientation="Horizontal" 

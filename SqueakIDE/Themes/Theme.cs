@@ -60,5 +60,16 @@ namespace SqueakIDE.Themes
 
         // UI element colors
         public Color BorderColor { get; set; }
+
+        // Additional Background Colors
+        public Color TertiaryBackground { get; set; }   // For popups, dropdowns
+        public Color InputBackground { get; set; }      // For textboxes, comboboxes
+        public Color HoverBackground { get; set; }      // For hover states
+        public Color ActiveBackground { get; set; }     // For active/focused elements
+        public Color PopupBackground { get; set; }      // For context menus, tooltips
+
+        // Add these new properties
+        public Color HoverForeground { get; set; }
+        public Color ActiveForeground { get; set; }
     }
 } 

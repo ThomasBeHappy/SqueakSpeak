@@ -1,8 +1,10 @@
-<Window x:Class="SqueakIDE.Dialogs.GitInitDialog"
+<local:ModernWindow  xmlns:local="clr-namespace:SqueakIDE.Windows" x:Class="SqueakIDE.Dialogs.GitInitDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Git Repository" Height="300" Width="500"
-        Background="#FF202020" WindowStartupLocation="CenterOwner">
+        Style="{StaticResource ModernWindowStyle}"
+        Background="{DynamicResource BackgroundBrush}" 
+        WindowStartupLocation="CenterOwner">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,22 +16,36 @@
 
         <!-- Repository Type Selection -->
         <StackPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock Text="Select Repository Type:" Foreground="White" Margin="0,0,0,5"/>
-            <ComboBox x:Name="RepoTypeComboBox" SelectionChanged="RepoTypeComboBox_SelectionChanged"
-                      Background="#FF303030" Foreground="Black">
-                <ComboBoxItem Content="Clone Existing Repository" Foreground="Black"/>
-                <ComboBoxItem Content="Initialize New Repository"/>
+            <TextBlock Text="Select Repository Type:" 
+                      Foreground="{DynamicResource ForegroundBrush}" 
+                      Margin="0,0,0,5"/>
+            <ComboBox x:Name="RepoTypeComboBox" 
+                      SelectionChanged="RepoTypeComboBox_SelectionChanged"
+                      Background="{DynamicResource ButtonBackgroundBrush}" 
+                      Foreground="{DynamicResource ButtonForegroundBrush}">
+                <ComboBoxItem Content="Clone Existing Repository" 
+                             Foreground="{DynamicResource ButtonForegroundBrush}"/>
+                <ComboBoxItem Content="Initialize New Repository"
+                             Foreground="{DynamicResource ButtonForegroundBrush}"/>
             </ComboBox>
         </StackPanel>
 
         <!-- Clone URL -->
         <StackPanel Grid.Row="1" x:Name="ClonePanel" Visibility="Visible" Margin="0,0,0,10">
-            <TextBlock Text="Repository URL:" Foreground="White" Margin="0,0,0,5"/>
-            <TextBox x:Name="CloneUrlBox" Background="#FF303030" Foreground="White"/>
+            <TextBlock Text="Repository URL:" 
+                      Foreground="{DynamicResource ForegroundBrush}" 
+                      Margin="0,0,0,5"/>
+            <TextBox x:Name="CloneUrlBox" 
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"/>
         </StackPanel>
 
         <!-- Credentials -->
-        <GroupBox Grid.Row="2" Header="Credentials" Foreground="White" Margin="0,0,0,10">
+        <GroupBox Grid.Row="2" Header="Credentials" 
+                 Foreground="{DynamicResource ForegroundBrush}" 
+                 BorderBrush="{DynamicResource BorderBrush}"
+                 Margin="0,0,0,10">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -41,32 +57,54 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Username:" Foreground="White" Margin="0,0,10,5"/>
+                <TextBlock Text="Username:" 
+                         Foreground="{DynamicResource ForegroundBrush}" 
+                         Margin="0,0,10,5"/>
                 <TextBox x:Name="UsernameBox" Grid.Column="1" Margin="0,0,0,5"
-                         Background="#FF303030" Foreground="White"/>
+                        Background="{DynamicResource ButtonBackgroundBrush}"
+                        Foreground="{DynamicResource ButtonForegroundBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"/>
 
-                <TextBlock Text="Email:" Grid.Row="1" Foreground="White" Margin="0,0,10,5"/>
+                <TextBlock Text="Email:" Grid.Row="1" 
+                         Foreground="{DynamicResource ForegroundBrush}" 
+                         Margin="0,0,10,5"/>
                 <TextBox x:Name="EmailBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"
-                         Background="#FF303030" Foreground="White"/>
+                        Background="{DynamicResource ButtonBackgroundBrush}"
+                        Foreground="{DynamicResource ButtonForegroundBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"/>
 
-                <TextBlock Text="Password:" Grid.Row="2" Foreground="White" Margin="0,0,10,5"/>
+                <TextBlock Text="Password:" Grid.Row="2" 
+                         Foreground="{DynamicResource ForegroundBrush}" 
+                         Margin="0,0,10,5"/>
                 <PasswordBox x:Name="PasswordBox" Grid.Row="2" Grid.Column="1"
-                            Background="#FF303030" Foreground="White"/>
+                           Background="{DynamicResource ButtonBackgroundBrush}"
+                           Foreground="{DynamicResource ButtonForegroundBrush}"
+                           BorderBrush="{DynamicResource BorderBrush}"/>
             </Grid>
         </GroupBox>
 
         <!-- Progress -->
         <ProgressBar Grid.Row="3" x:Name="ProgressBar" Height="20" Margin="0,10"
+                     Background="{DynamicResource ButtonBackgroundBrush}"
+                     BorderBrush="{DynamicResource BorderBrush}"
                      Visibility="Collapsed"/>
 
         <!-- Buttons -->
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Skip Git" Width="75" Click="SkipButton_Click" 
-                    Background="#FF404040" Foreground="White" Margin="0,0,10,0"/>
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    Margin="0,0,10,0"/>
             <Button Content="OK" Width="75" Click="OkButton_Click" 
-                    Background="#FF404040" Foreground="White" Margin="0,0,10,0"/>
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    Margin="0,0,10,0"/>
             <Button Content="Cancel" Width="75" Click="CancelButton_Click"
-                    Background="#FF404040" Foreground="White"/>
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"/>
         </StackPanel>
     </Grid>
-</Window> 
+</local:ModernWindow>

@@ -6,8 +6,8 @@
         SizeToContent="WidthAndHeight"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#1E1E1E"
-        BorderBrush="#333333"
+        Background="{DynamicResource BackgroundBrush}"
+        BorderBrush="{DynamicResource BorderBrush}"
         BorderThickness="1">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -20,7 +20,7 @@
             FontFamily="Consolas"
             FontSize="12"
             Background="Transparent"
-            Foreground="#90EE90"
+            Foreground="{DynamicResource EditorForegroundBrush}"
             IsReadOnly="True"
             ShowLineNumbers="False"
             Margin="0,0,0,10"
@@ -38,11 +38,15 @@
                     Click="Apply_Click"
                     Width="70"
                     Height="25"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
                     Margin="0,0,10,0"/>
             <Button Content="Cancel" 
                     Click="Cancel_Click"
                     Width="70"
-                    Height="25"/>
+                    Height="25"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"/>
         </StackPanel>
     </Grid>
 </Window> 

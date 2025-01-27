@@ -180,6 +180,13 @@ namespace SqueakIDE.Dialogs
             _workingCopy.PrimaryText = _workingCopy.ForegroundColor;
             _workingCopy.SecondaryText = _workingCopy.IsDark ?
                 Color.FromRgb(200, 200, 200) : Color.FromRgb(120, 110, 100);
+
+            // Calculate hover and active foreground colors
+            _workingCopy.HoverForeground = _workingCopy.IsDark ? 
+                Color.FromRgb(255, 255, 255) : // Pure white for dark themes
+                Color.FromRgb(0, 0, 0);        // Pure black for light themes
+            
+            _workingCopy.ActiveForeground = _workingCopy.HoverForeground; // Same as hover for now
         }
 
         private void Preview_Click(object sender, RoutedEventArgs e)

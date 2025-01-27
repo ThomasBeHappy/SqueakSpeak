@@ -1,27 +1,28 @@
-<Window x:Class="SqueakIDE.Dialogs.SearchOptionsDialog"
+<local:ModernWindow  xmlns:local="clr-namespace:SqueakIDE.Windows" x:Class="SqueakIDE.Dialogs.SearchOptionsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Search Options" 
         Height="200" Width="300"
-        Background="#FF202020"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Style="{StaticResource ModernWindowStyle}"
         WindowStartupLocation="CenterOwner">
     <StackPanel Margin="10">
         <CheckBox x:Name="MatchCaseCheckBox" 
                   Content="Match case" 
                   Margin="0,5"
-                  Foreground="White"/>
+                  Foreground="{DynamicResource ForegroundBrush}"/>
         <CheckBox x:Name="WholeWordCheckBox" 
                   Content="Match whole word" 
                   Margin="0,5"
-                  Foreground="White"/>
+                  Foreground="{DynamicResource ForegroundBrush}"/>
         <CheckBox x:Name="RegexCheckBox" 
                   Content="Use regular expressions" 
                   Margin="0,5"
-                  Foreground="White"/>
+                  Foreground="{DynamicResource ForegroundBrush}"/>
         <CheckBox x:Name="SearchAllFilesCheckBox" 
                   Content="Search in all files" 
                   Margin="0,5"
-                  Foreground="White"/>
+                  Foreground="{DynamicResource ForegroundBrush}"/>
         
         <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Right" 
@@ -29,14 +30,14 @@
             <Button Content="OK" 
                     Width="70" 
                     Click="OkButton_Click"
-                    Background="#FF303030"
-                    Foreground="White"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
                     Margin="0,0,10,0"/>
             <Button Content="Cancel" 
                     Width="70" 
                     Click="CancelButton_Click"
-                    Background="#FF303030"
-                    Foreground="White"/>
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"/>
         </StackPanel>
     </StackPanel>
-</Window> 
+</local:ModernWindow>

@@ -149,26 +149,21 @@
             </Setter>
         </Style>
         <Style TargetType="TreeView">
-            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style TargetType="TreeViewItem">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-            <Setter Property="FontFamily" Value="Consolas" />
-            <Setter Property="FontSize" Value="14" />
-            <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
-                                Color="{DynamicResource HighlightColor}"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
-                                Color="{DynamicResource ForegroundColor}"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
-                                Color="{DynamicResource HighlightColor}"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" 
-                                Color="{DynamicResource ForegroundColor}"/>
-            </Style.Resources>
+            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SelectionBackgroundBrush}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
 
@@ -179,6 +174,187 @@
         </Style>
 
         <SolidColorBrush x:Key="UserMessageBackground" Color="{Binding Color, Source={DynamicResource BackgroundBrush}}"/>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Focusable="false"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                <Path x:Name="Arrow"
+                                      Fill="{DynamicResource ForegroundBrush}"
+                                      HorizontalAlignment="Right"
+                                      Data="M0,0 L4,4 L8,0 Z"
+                                      Margin="0,2,5,0"/>
+                            </ToggleButton>
+                            <ContentPresenter x:Name="ContentSite"
+                                            Margin="{TemplateBinding Padding}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+                            <Popup x:Name="Popup"
+                                   AllowsTransparency="True"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   Placement="Bottom"
+                                   PopupAnimation="Slide">
+                                <Grid x:Name="DropDown" 
+                                      Background="{DynamicResource InputBackgroundBrush}"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1">
+                                        <ScrollViewer SnapsToDevicePixels="True">
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Add this style for ComboBoxItem -->
+        <Style x:Key="ToolBarComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SelectionBackgroundBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Add to your resources -->
+        <Style TargetType="ToolBar">
+            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolBar">
+                        <Border Name="MainPanelBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ToolBarPanel Name="PART_ToolBarPanel"
+                                             Grid.Column="0"
+                                             IsItemsHost="true"
+                                             Margin="{TemplateBinding Padding}"
+                                             Background="{TemplateBinding Background}"/>
+                                <!-- Empty grid cell to replace the overflow button -->
+                                <Rectangle Grid.Column="1" 
+                                         Width="11"
+                                         Fill="{TemplateBinding Background}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ToolBarPanel">
+            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <Style x:Key="ToolBarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ToolBarSeparatorStyle" TargetType="Separator">
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Width" Value="1"/>
+            <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+        </Style>
+
+        <Style x:Key="ToolBarComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Focusable="false"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                <Path x:Name="Arrow"
+                                      Fill="{DynamicResource ForegroundBrush}"
+                                      HorizontalAlignment="Right"
+                                      Data="M0,0 L4,4 L8,0 Z"
+                                      Margin="0,2,5,0"/>
+                            </ToggleButton>
+                            <ContentPresenter x:Name="ContentSite"
+                                            Margin="{TemplateBinding Padding}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+                            <Popup x:Name="Popup"
+                                   AllowsTransparency="True"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   Placement="Bottom"
+                                   PopupAnimation="Slide">
+                                <Grid x:Name="DropDown" 
+                                      Background="{DynamicResource InputBackgroundBrush}"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1">
+                                        <ScrollViewer SnapsToDevicePixels="True">
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </Window.Resources>
     <DockPanel Margin="0" Background="{DynamicResource BackgroundBrush}">
@@ -212,95 +388,86 @@
         <!-- Main Toolbar with Border -->
         <Border DockPanel.Dock="Top" 
                 BorderBrush="{DynamicResource BorderBrush}" 
-                BorderThickness="0,0,0,1">
-            <ToolBar Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">
+                BorderThickness="0,0,0,1"
+                Background="{DynamicResource SecondaryBackgroundBrush}">
+            <StackPanel Orientation="Horizontal" Margin="5,2">
                 <!-- Left-aligned buttons -->
-                <Button Content="Run" Click="RunCode" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
+                <Button Content="Run" Click="RunCode" Style="{StaticResource ToolBarButtonStyle}"/>
                 <ComboBox x:Name="LogLevelComboBox" 
                         Width="100" 
                         SelectedIndex="0"
                         SelectionChanged="LogLevel_SelectionChanged"
-                        Background="{DynamicResource BackgroundBrush}"
-                        Foreground="{DynamicResource ForegroundBrush}">
-                    <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Error</ComboBoxItem>
-                    <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Warning</ComboBoxItem>
-                    <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Information</ComboBoxItem>
-                    <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Debug</ComboBoxItem>
-                    <ComboBoxItem Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}">Trace</ComboBoxItem>
+                        Style="{StaticResource ToolBarComboBoxStyle}">
+                    <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Error</ComboBoxItem>
+                    <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Warning</ComboBoxItem>
+                    <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Information</ComboBoxItem>
+                    <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Debug</ComboBoxItem>
+                    <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Trace</ComboBoxItem>
                 </ComboBox>
-                <Button Content="Open Folder" Click="OpenFolder" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
-                <Button Content="New Tab" Click="CreateNewFile" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
-                <Button Content="Save As" Click="SaveAs_Click" Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource ForegroundBrush}" />
+                <Button Content="Open Folder" Click="OpenFolder" Style="{StaticResource ToolBarButtonStyle}"/>
+                <Button Content="New Tab" Click="CreateNewFile" Style="{StaticResource ToolBarButtonStyle}"/>
+                <Button Content="Save As" Click="SaveAs_Click" Style="{StaticResource ToolBarButtonStyle}"/>
 
-                <!-- Git Toolbar -->
-                <Separator />
-                <Button Click="GitLogin_Click" ToolTip="Git Login" Background="{DynamicResource BorderBrush}">
-                    <TextBlock Text="🔑" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
+                <!-- Git Section -->
+                <Rectangle Width="1" Margin="5,0" Fill="{DynamicResource BorderBrush}"/>
+                <Button Click="GitLogin_Click" ToolTip="Git Login" Style="{StaticResource ToolBarButtonStyle}">
+                    <TextBlock Text="🔑" FontSize="16"/>
                 </Button>
-                <Button Click="GitCommit_Click" ToolTip="Commit Changes" Background="{DynamicResource BorderBrush}">
-                    <TextBlock Text="📝" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
+                <Button Click="GitCommit_Click" ToolTip="Commit Changes" Style="{StaticResource ToolBarButtonStyle}">
+                    <TextBlock Text="📝" FontSize="16"/>
                 </Button>
-                <Button Click="GitPull_Click" ToolTip="Pull Changes" Background="{DynamicResource BorderBrush}">
-                    <TextBlock Text="⬇️" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
+                <Button Click="GitPull_Click" ToolTip="Pull Changes" Style="{StaticResource ToolBarButtonStyle}">
+                    <TextBlock Text="⬇️" FontSize="16"/>
                 </Button>
-                <Button Click="GitPush_Click" ToolTip="Push Changes" Background="{DynamicResource BorderBrush}">
-                    <TextBlock Text="⬆️" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
+                <Button Click="GitPush_Click" ToolTip="Push Changes" Style="{StaticResource ToolBarButtonStyle}">
+                    <TextBlock Text="⬆️" FontSize="16"/>
                 </Button>
                 <ComboBox x:Name="BranchComboBox" 
                           Width="150"
-                          Background="{DynamicResource BackgroundBrush}"
-                          Foreground="{DynamicResource ForegroundBrush}"
+                          Style="{StaticResource ToolBarComboBoxStyle}"
                           SelectionChanged="BranchComboBox_SelectionChanged"/>
 
-                <!-- LiveShare Toolbar -->
-                <Separator />
+                <!-- LiveShare Section -->
+                <Rectangle Width="1" Margin="5,0" Fill="{DynamicResource BorderBrush}"/>
                 <Button Content="Start LiveShare" 
                         Click="StartLiveShare_Click" 
-                        Background="{DynamicResource BorderBrush}" 
-                        Foreground="{DynamicResource ForegroundBrush}">
-                    <Button.ToolTip>
-                        <ToolTip>Start a new LiveShare session</ToolTip>
-                    </Button.ToolTip>
-                </Button>
+                        Style="{StaticResource ToolBarButtonStyle}"
+                        ToolTip="Start a new LiveShare session"/>
                 <Button Content="Join LiveShare" 
                         Click="JoinLiveShare_Click" 
-                        Background="{DynamicResource BorderBrush}" 
-                        Foreground="{DynamicResource ForegroundBrush}">
-                    <Button.ToolTip>
-                        <ToolTip>Join an existing LiveShare session</ToolTip>
-                    </Button.ToolTip>
-                </Button>
+                        Style="{StaticResource ToolBarButtonStyle}"
+                        ToolTip="Join an existing LiveShare session"/>
                 <Button Content="End LiveShare" 
                         Click="EndLiveShare_Click" 
-                        Background="{DynamicResource BorderBrush}" 
-                        Foreground="{DynamicResource ForegroundBrush}">
-                    <Button.ToolTip>
-                        <ToolTip>End current LiveShare session</ToolTip>
-                    </Button.ToolTip>
-                </Button>
+                        Style="{StaticResource ToolBarButtonStyle}"
+                        ToolTip="End current LiveShare session"/>
 
-                <!-- Themes Menu -->
-                <Separator />
-                <Button x:Name="ThemeButton" Background="{DynamicResource BackgroundBrush}" Click="ThemeButton_Click">
-                    <Button.Content>
-                        <TextBlock Text="🎨" FontSize="16" Foreground="{DynamicResource ForegroundBrush}"/>
-                    </Button.Content>
+                <!-- Theme Button and Popup -->
+                <Button x:Name="ThemeButton" 
+                        Click="ThemeButton_Click"
+                        Style="{StaticResource ToolBarButtonStyle}">
+                    <TextBlock Text="🎨" FontSize="16"/>
                 </Button>
                 <Popup x:Name="ThemesPopup" 
                        StaysOpen="False" 
                        Placement="Bottom" 
                        PlacementTarget="{Binding ElementName=ThemeButton}"
                        AllowsTransparency="True">
-                    <Border Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <Border Background="{DynamicResource PopupBackgroundBrush}" 
+                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderThickness="1">
                         <Menu Background="Transparent">
                             <Menu.Resources>
                                 <Style TargetType="MenuItem">
-                                    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}"/>
                                     <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
                                     <Setter Property="BorderThickness" Value="0"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrush}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -322,16 +489,30 @@
                                     <MenuItem Header="Monokai Pro" Click="Theme_Click" Tag="MonokaiPro"/>
                                     <MenuItem Header="Solarized Dark" Click="Theme_Click" Tag="SolarizedDark"/>
                                     <Separator/>
-                                    <MenuItem Header="Custom Themes" Name="CustomThemesMenu">
+                                    <MenuItem Header="Custom Themes" x:Name="CustomThemesMenu">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="MenuItem">
+                                                <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
                                                 <Setter Property="ContextMenu">
                                                     <Setter.Value>
-                                                        <ContextMenu>
-                                                            <MenuItem Header="Delete" Click="DeleteTheme_Click"/>
+                                                        <ContextMenu Background="{DynamicResource PopupBackgroundBrush}"
+                                                                   BorderBrush="{DynamicResource BorderBrush}">
+                                                            <MenuItem Header="Delete" 
+                                                                      Click="DeleteTheme_Click"
+                                                                      Background="{DynamicResource PopupBackgroundBrush}"
+                                                                      Foreground="{DynamicResource ForegroundBrush}"/>
                                                         </ContextMenu>
                                                     </Setter.Value>
                                                 </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
                                             </Style>
                                         </MenuItem.ItemContainerStyle>
                                     </MenuItem>
@@ -342,14 +523,24 @@
                         </Menu>
                     </Border>
                 </Popup>
-            </ToolBar>
+            </StackPanel>
+        </Border>
+
+        <!-- Extensions Section -->
+        <Border DockPanel.Dock="Top" 
+                BorderBrush="{DynamicResource BorderBrush}" 
+                BorderThickness="0,0,0,1"
+                Background="{DynamicResource SecondaryBackgroundBrush}">
+            <StackPanel x:Name="ExtensionsToolbar" 
+                        Orientation="Horizontal" 
+                        Margin="5,2"/>
         </Border>
 
         <!-- Status Bar with Top Border -->
         <Border DockPanel.Dock="Bottom" 
                 BorderBrush="{DynamicResource BorderBrush}" 
                 BorderThickness="0,1,0,0">
-            <StatusBar Background="{DynamicResource BackgroundBrush}" Height="Auto">
+            <StatusBar Background="{DynamicResource SecondaryBackgroundBrush}" Height="Auto">
                 <TextBlock x:Name="StatusText" Foreground="{DynamicResource ForegroundBrush}" Text="Ready"/>
                 <Separator/>
                 <TextBlock x:Name="LineColStatus" Foreground="{DynamicResource ForegroundBrush}"/>
@@ -359,7 +550,7 @@
         </Border>
 
         <!-- Docking Manager with Borders -->
-        <avalonDock:DockingManager x:Name="DockingManager" Background="{DynamicResource BackgroundBrush}">
+        <avalonDock:DockingManager x:Name="DockingManager" Background="{DynamicResource SecondaryBackgroundBrush}">
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel Orientation="Horizontal">
                     <!-- Folder Explorer Panel with Border -->
@@ -369,7 +560,7 @@
                                 <Border BorderBrush="{DynamicResource BorderBrush}" 
                                         BorderThickness="1">
                                     <TreeView x:Name="FolderExplorer"
-                                            Background="{DynamicResource BackgroundBrush}"
+                                            Background="{DynamicResource TertiaryBackgroundBrush}"
                                             Foreground="{DynamicResource ForegroundBrush}"
                                             SelectedItemChanged="FolderExplorer_SelectedItemChanged"
                                             Grid.Row="1">
@@ -459,7 +650,7 @@
                                                 FontFamily="Consolas"
                                                 FontSize="14"
                                                 IsReadOnly="True"
-                                                Background="{DynamicResource BackgroundBrush}"
+                                                Background="{DynamicResource TertiaryBackgroundBrush}"
                                                 Foreground="{DynamicResource ForegroundBrush}"
                                                 TextWrapping="Wrap"
                                                 VerticalScrollBarVisibility="Auto" />
@@ -471,7 +662,7 @@
                                     <Border BorderBrush="{DynamicResource BorderBrush}" 
                                             BorderThickness="1">
                                         <ListBox x:Name="ErrorList"
-                                                Background="{DynamicResource BackgroundBrush}"
+                                                Background="{DynamicResource TertiaryBackgroundBrush}"
                                                 Foreground="{DynamicResource ForegroundBrush}"
                                                 BorderThickness="0"
                                                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
@@ -497,12 +688,12 @@
                                             <ScrollViewer x:Name="ChatScrollViewer" 
                                                         Grid.Row="0" 
                                                         VerticalScrollBarVisibility="Auto">
-                                                <ItemsControl x:Name="ChatMessages" Background="{DynamicResource BackgroundBrush}">
+                                                <ItemsControl x:Name="ChatMessages" Background="{DynamicResource SecondaryBackgroundBrush}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
                                                             <Border Margin="5" 
                                                                     Padding="10" 
-                                                                    Background="{DynamicResource BackgroundBrush}"
+                                                                    Background="{DynamicResource SecondaryBackgroundBrush}"
                                                                     CornerRadius="5">
                                                                 <StackPanel>
                                                                     <TextBlock Text="{Binding Sender}" 
@@ -530,7 +721,7 @@
                                                 <TextBox x:Name="MessageInput" 
                                                         Grid.Column="0"
                                                         Margin="0,0,5,0"
-                                                        Background="{DynamicResource BackgroundBrush}"
+                                                        Background="{DynamicResource InputBackgroundBrush}"
                                                         Foreground="{DynamicResource ForegroundBrush}"
                                                         AcceptsReturn="True"
                                                         TextWrapping="Wrap"

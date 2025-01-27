@@ -41,6 +41,7 @@ using Xceed.Wpf.AvalonDock.Themes;
 using System.Windows.Interop;
 using SqueakIDE.Models;
 using SqueakIDE.Themes;
+using SqueakIDE.Extensions;
 
 namespace SqueakIDE
 {
@@ -72,6 +73,8 @@ namespace SqueakIDE
         private double _defaultHeight = 800;
         private double _defaultLeft;
         private double _defaultTop;
+        private readonly ExtensionManager _extensionManager;
+        private readonly ExtensionHost _extensionHost;
 
         private class SearchResult
         {
@@ -109,12 +112,25 @@ namespace SqueakIDE
                 _defaultTop = Top;
             };
             InitializeThemeMenu();
+
+            _extensionHost = new ExtensionHost(this);
+            _extensionManager = new ExtensionManager(_extensionHost);
+
+            // Subscribe to the Loaded event
+            this.Loaded += MainWindow_Loaded;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeLoggerFactory();
             InitializeThemeMenu();
+
+            // Load extensions after window is fully loaded
+            var extensionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Extensions");
+            if (Directory.Exists(extensionsPath))
+            {
+                _extensionManager.LoadExtensions(extensionsPath);
+            }
         }
 
         private void InitializeLoggerFactory()
@@ -180,6 +196,8 @@ namespace SqueakIDE
             {
                 ShowError($"Error saving file: {ex.Message}");
             }
+
+            _extensionHost.OnFileSaved(filePath);
         }
 
         private bool SaveAs(ICSharpCode.AvalonEdit.TextEditor editor, LayoutDocument document)
@@ -647,6 +665,8 @@ namespace SqueakIDE
             {
                 ShowError($"Access denied: {ex.Message}");
             }
+
+            _extensionHost.OnFileOpened(filePath);
         }
 
         private LayoutDocument FindExistingDocument(string title)

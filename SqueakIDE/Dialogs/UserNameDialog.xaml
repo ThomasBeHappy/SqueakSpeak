@@ -5,7 +5,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Set Username" Height="150" Width="300"
         WindowStartupLocation="CenterOwner"
-        Background="#1E1E1E">
+        Background="{DynamicResource BackgroundBrush}"
+        Style="{StaticResource ModernWindowStyle}">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,14 +15,15 @@
         </Grid.RowDefinitions>
         
         <TextBlock Text="Enter your username:" 
-                   Foreground="White" 
+                   Foreground="{DynamicResource ForegroundBrush}"
                    Margin="0,0,0,5"/>
         
         <TextBox x:Name="UsernameTextBox" 
                  Grid.Row="1" 
                  Margin="0,0,0,10"
-                 Background="#2D2D2D"
-                 Foreground="White"
+                 Background="{DynamicResource ButtonBackgroundBrush}"
+                 Foreground="{DynamicResource ButtonForegroundBrush}"
+                 BorderBrush="{DynamicResource BorderBrush}"
                  Padding="5"/>
         
         <StackPanel Grid.Row="2" 
@@ -29,11 +31,15 @@
                     HorizontalAlignment="Right">
             <Button Content="OK" 
                     Width="70" 
-                    Click="OkButton_Click" 
+                    Click="OkButton_Click"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
                     Margin="0,0,5,0"/>
             <Button Content="Cancel" 
-                    Width="70" 
+                    Width="70"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
                     Click="CancelButton_Click"/>
         </StackPanel>
     </Grid>
-</local:ModernWindow> 
+</local:ModernWindow>

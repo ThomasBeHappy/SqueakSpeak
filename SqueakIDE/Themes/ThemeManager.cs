@@ -45,6 +45,9 @@ namespace SqueakIDE.Themes
                     IsDark = false,
                     PrimaryBackground = Color.FromRgb(255, 253, 240),
                     SecondaryBackground = Color.FromRgb(255, 248, 220),
+                    TertiaryBackground = Color.FromRgb(255, 245, 215),
+                    InputBackground = Color.FromRgb(255, 250, 230),
+                    HoverBackground = Color.FromRgb(255, 235, 200),
                     AccentColor = Color.FromRgb(255, 183, 77),
                     ForegroundColor = Color.FromRgb(70, 60, 50),
                     MenuBackground = Color.FromRgb(255, 248, 220),
@@ -75,7 +78,11 @@ namespace SqueakIDE.Themes
                     NumberColor = Color.FromRgb(140, 120, 40),
                     BorderColor = Color.FromRgb(230, 220, 210),
                     PrimaryText = Color.FromRgb(70, 60, 50),
-                    SecondaryText = Color.FromRgb(120, 110, 100)
+                    SecondaryText = Color.FromRgb(120, 110, 100),
+                    ActiveBackground = Color.FromRgb(255, 240, 210),
+                    PopupBackground = Color.FromRgb(255, 250, 235),
+                    HoverForeground = Color.FromRgb(70, 60, 50),
+                    ActiveForeground = Color.FromRgb(70, 60, 50)
                 };
 
                 _themes["OceanDepths"] = new Theme
@@ -85,6 +92,9 @@ namespace SqueakIDE.Themes
                     IsDark = true,
                     PrimaryBackground = Color.FromRgb(15, 25, 35),
                     SecondaryBackground = Color.FromRgb(25, 45, 65),
+                    TertiaryBackground = Color.FromRgb(30, 50, 70),
+                    InputBackground = Color.FromRgb(20, 35, 50),
+                    HoverBackground = Color.FromRgb(35, 60, 85),
                     AccentColor = Color.FromRgb(64, 224, 208),
                     ForegroundColor = Color.FromRgb(220, 230, 240),
                     MenuBackground = Color.FromRgb(18, 35, 50),
@@ -115,7 +125,11 @@ namespace SqueakIDE.Themes
                     NumberColor = Color.FromRgb(174, 129, 255),
                     BorderColor = Color.FromRgb(35, 55, 75),
                     PrimaryText = Color.FromRgb(220, 230, 240),
-                    SecondaryText = Color.FromRgb(180, 200, 220)
+                    SecondaryText = Color.FromRgb(180, 200, 220),
+                    ActiveBackground = Color.FromRgb(30, 55, 75),
+                    PopupBackground = Color.FromRgb(18, 35, 50),
+                    HoverForeground = Color.FromRgb(240, 250, 255),
+                    ActiveForeground = Color.FromRgb(240, 250, 255)
                 };
 
                 _themes["ForestCanopy"] = new Theme
@@ -125,6 +139,9 @@ namespace SqueakIDE.Themes
                     IsDark = true,
                     PrimaryBackground = Color.FromRgb(28, 32, 26),
                     SecondaryBackground = Color.FromRgb(38, 42, 36),
+                    TertiaryBackground = Color.FromRgb(43, 47, 41),
+                    InputBackground = Color.FromRgb(33, 37, 31),
+                    HoverBackground = Color.FromRgb(58, 62, 56),
                     AccentColor = Color.FromRgb(144, 190, 109),
                     ForegroundColor = Color.FromRgb(230, 235, 225),
                     MenuBackground = Color.FromRgb(33, 37, 31),
@@ -155,7 +172,11 @@ namespace SqueakIDE.Themes
                     NumberColor = Color.FromRgb(170, 200, 140),
                     BorderColor = Color.FromRgb(38, 42, 36),
                     PrimaryText = Color.FromRgb(230, 235, 225),
-                    SecondaryText = Color.FromRgb(180, 190, 170)
+                    SecondaryText = Color.FromRgb(180, 190, 170),
+                    ActiveBackground = Color.FromRgb(48, 52, 46),
+                    PopupBackground = Color.FromRgb(33, 37, 31),
+                    HoverForeground = Color.FromRgb(240, 245, 235),
+                    ActiveForeground = Color.FromRgb(240, 245, 235)
                 };
 
                 // Initialize CozyDark last
@@ -166,6 +187,11 @@ namespace SqueakIDE.Themes
                     IsDark = true,
                     PrimaryBackground = Color.FromRgb(30, 30, 30),
                     SecondaryBackground = Color.FromRgb(45, 45, 45),
+                    TertiaryBackground = Color.FromRgb(50, 50, 50),
+                    InputBackground = Color.FromRgb(40, 40, 40),
+                    HoverBackground = Color.FromRgb(60, 60, 60),
+                    SelectionBackground = Color.FromRgb(70, 90, 70),
+                    ActiveBackground = Color.FromRgb(55, 55, 55),
                     AccentColor = Color.FromRgb(137, 209, 133),
                     ForegroundColor = Color.FromRgb(240, 240, 240),
                     MenuBackground = Color.FromRgb(35, 35, 35),
@@ -175,7 +201,6 @@ namespace SqueakIDE.Themes
                     ButtonForeground = Color.FromRgb(240, 240, 240),
                     ButtonHover = Color.FromRgb(60, 60, 60),
                     ButtonPressed = Color.FromRgb(70, 70, 70),
-                    SelectionBackground = Color.FromRgb(70, 90, 70),
                     SelectionForeground = Color.FromRgb(255, 255, 255),
                     FocusBorder = Color.FromRgb(137, 209, 133),
                     ErrorColor = Color.FromRgb(240, 80, 80),
@@ -196,7 +221,10 @@ namespace SqueakIDE.Themes
                     NumberColor = Color.FromRgb(181, 206, 168),
                     BorderColor = Color.FromRgb(45, 45, 45),
                     PrimaryText = Color.FromRgb(240, 240, 240),
-                    SecondaryText = Color.FromRgb(200, 200, 200)
+                    SecondaryText = Color.FromRgb(200, 200, 200),
+                    PopupBackground = Color.FromRgb(35, 35, 35),
+                    HoverForeground = Color.FromRgb(255, 255, 255),
+                    ActiveForeground = Color.FromRgb(255, 255, 255)
                 };
                 // Initialize SolarizedDark
                 _themes["SolarizedDark"] = new Theme
@@ -206,6 +234,12 @@ namespace SqueakIDE.Themes
                     IsDark = true,
                     PrimaryBackground = Color.FromRgb(0, 43, 54),
                     SecondaryBackground = Color.FromRgb(7, 54, 66),
+                    TertiaryBackground = Color.FromRgb(0, 43, 54),
+                    InputBackground = Color.FromRgb(7, 54, 66),
+                    HoverBackground = Color.FromRgb(88, 110, 117),
+                    SelectionBackground = Color.FromRgb(7, 54, 66),
+                    ActiveBackground = Color.FromRgb(0, 43, 54),
+                    PopupBackground = Color.FromRgb(0, 43, 54),
                     AccentColor = Color.FromRgb(38, 139, 210),
                     ForegroundColor = Color.FromRgb(253, 246, 227),
                     MenuBackground = Color.FromRgb(0, 43, 54),
@@ -215,7 +249,6 @@ namespace SqueakIDE.Themes
                     ButtonForeground = Color.FromRgb(253, 246, 227),
                     ButtonHover = Color.FromRgb(88, 110, 117),
                     ButtonPressed = Color.FromRgb(101, 123, 131),
-                    SelectionBackground = Color.FromRgb(7, 54, 66),
                     SelectionForeground = Color.FromRgb(253, 246, 227),
                     FocusBorder = Color.FromRgb(38, 139, 210),
                     ErrorColor = Color.FromRgb(220, 50, 47),
@@ -236,7 +269,9 @@ namespace SqueakIDE.Themes
                     NumberColor = Color.FromRgb(220, 50, 47),
                     BorderColor = Color.FromRgb(7, 54, 66),
                     PrimaryText = Color.FromRgb(253, 246, 227),
-                    SecondaryText = Color.FromRgb(147, 161, 161)
+                    SecondaryText = Color.FromRgb(147, 161, 161),
+                    HoverForeground = Color.FromRgb(253, 246, 227),
+                    ActiveForeground = Color.FromRgb(253, 246, 227)
                 };
 
                 // Initialize MonokaiPro
@@ -247,6 +282,11 @@ namespace SqueakIDE.Themes
                     IsDark = true,
                     PrimaryBackground = Color.FromRgb(45, 42, 46),
                     SecondaryBackground = Color.FromRgb(52, 49, 53),
+                    TertiaryBackground = Color.FromRgb(57, 54, 58),
+                    InputBackground = Color.FromRgb(47, 44, 48),
+                    HoverBackground = Color.FromRgb(66, 63, 67),
+                    SelectionBackground = Color.FromRgb(73, 70, 74),
+                    ActiveBackground = Color.FromRgb(62, 59, 63),
                     AccentColor = Color.FromRgb(255, 97, 136),
                     ForegroundColor = Color.FromRgb(252, 252, 252),
                     MenuBackground = Color.FromRgb(45, 42, 46),
@@ -256,7 +296,6 @@ namespace SqueakIDE.Themes
                     ButtonForeground = Color.FromRgb(252, 252, 252),
                     ButtonHover = Color.FromRgb(66, 63, 67),
                     ButtonPressed = Color.FromRgb(73, 70, 74),
-                    SelectionBackground = Color.FromRgb(73, 70, 74),
                     SelectionForeground = Color.FromRgb(252, 252, 252),
                     FocusBorder = Color.FromRgb(255, 97, 136),
                     ErrorColor = Color.FromRgb(255, 97, 136),
@@ -277,7 +316,10 @@ namespace SqueakIDE.Themes
                     NumberColor = Color.FromRgb(174, 129, 255),
                     BorderColor = Color.FromRgb(52, 49, 53),
                     PrimaryText = Color.FromRgb(252, 252, 252),
-                    SecondaryText = Color.FromRgb(200, 200, 200)
+                    SecondaryText = Color.FromRgb(200, 200, 200),
+                    PopupBackground = Color.FromRgb(45, 42, 46),
+                    HoverForeground = Color.FromRgb(252, 252, 252),
+                    ActiveForeground = Color.FromRgb(252, 252, 252)
                 };
 
                 // Set default theme
@@ -363,6 +405,19 @@ namespace SqueakIDE.Themes
                 resources["LineNumberBrush"] = CreateBrush(CurrentTheme.LineNumberColor);
                 resources["CurrentLineBrush"] = CreateBrush(CurrentTheme.CurrentLineBackground);
                 resources["IndentationGuidesBrush"] = CreateBrush(CurrentTheme.IndentationGuidesColor);
+
+                // New brushes
+                resources["SecondaryBackgroundBrush"] = new SolidColorBrush(CurrentTheme.SecondaryBackground);
+                resources["TertiaryBackgroundBrush"] = new SolidColorBrush(CurrentTheme.TertiaryBackground);
+                resources["InputBackgroundBrush"] = new SolidColorBrush(CurrentTheme.InputBackground);
+                resources["HoverBackgroundBrush"] = new SolidColorBrush(CurrentTheme.HoverBackground);
+                resources["SelectionBackgroundBrush"] = new SolidColorBrush(CurrentTheme.SelectionBackground);
+                resources["ActiveBackgroundBrush"] = new SolidColorBrush(CurrentTheme.ActiveBackground);
+                resources["PopupBackgroundBrush"] = new SolidColorBrush(CurrentTheme.PopupBackground);
+
+                // Add these new brushes
+                resources["HoverForegroundBrush"] = CreateBrush(CurrentTheme.HoverForeground);
+                resources["ActiveForegroundBrush"] = CreateBrush(CurrentTheme.ActiveForeground);
             }
             catch (Exception ex)
             {
