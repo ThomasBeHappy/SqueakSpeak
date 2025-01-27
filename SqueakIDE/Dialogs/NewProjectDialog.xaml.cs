@@ -1,10 +1,11 @@
 using System.Windows;
 using System.Windows.Forms;
+using SqueakIDE.Windows;
 using MessageBox = System.Windows.MessageBox;
 
 namespace SqueakIDE.Dialogs
 {
-    public partial class NewProjectDialog : Window
+    public partial class NewProjectDialog : ModernWindow
     {
         public string ProjectName => ProjectNameBox.Text;
         public string ProjectPath => ProjectPathBox.Text;

@@ -1,10 +1,11 @@
 using System.Windows;
 using System.Windows.Media;
 using SqueakIDE.Themes;
+using SqueakIDE.Windows;
 
 namespace SqueakIDE.Dialogs
 {
-    public partial class ThemeEditorDialog : Window
+    public partial class ThemeEditorDialog : ModernWindow
     {
         private Theme _currentTheme;
         private Theme _workingCopy;

@@ -1,4 +1,6 @@
-<Window x:Class="SqueakIDE.ConsoleWindow"
+<local:ModernWindow 
+        x:Class="SqueakIDE.ConsoleWindow"
+        xmlns:local="clr-namespace:SqueakIDE.Windows"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SqueakSpeak Console" Height="400" Width="600"
@@ -42,4 +44,4 @@
                      KeyDown="InputTextBox_KeyDown"/>
         </DockPanel>
     </Grid>
-</Window> 
+</local:ModernWindow> 

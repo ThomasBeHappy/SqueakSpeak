@@ -1,8 +1,9 @@
 using System.Windows;
+using SqueakIDE.Windows;
 
 namespace SqueakIDE.Dialogs
 {
-    public partial class TextInputDialog : Window
+    public partial class TextInputDialog : ModernWindow
     {
         public string Result => InputBox.Text;
         public string Prompt { get; }

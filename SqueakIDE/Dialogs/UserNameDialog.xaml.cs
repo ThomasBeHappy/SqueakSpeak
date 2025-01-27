@@ -1,7 +1,8 @@
 using System.Windows;
+using SqueakIDE.Windows;
 
 namespace SqueakIDE.Dialogs;
-public partial class UserNameDialog : Window
+public partial class UserNameDialog : ModernWindow
 {
     public string Username { get; private set; }
 

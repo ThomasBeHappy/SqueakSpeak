@@ -1,4 +1,5 @@
 using SqueakIDE.Controls;
+using SqueakIDE.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Windows.Media;
 
 namespace SqueakIDE.Dialogs
 {
-    public partial class GitCommitDialog : Window
+    public partial class GitCommitDialog : ModernWindow
     {
         public string CommitMessage { get; private set; }
         public List<string> SelectedFiles { get; private set; }

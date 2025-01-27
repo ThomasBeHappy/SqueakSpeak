@@ -1,4 +1,6 @@
-<Window x:Class="SqueakIDE.Dialogs.TextInputDialog"
+<local:ModernWindow 
+        xmlns:local="clr-namespace:SqueakIDE.Windows"
+        x:Class="SqueakIDE.Dialogs.TextInputDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Title}" Height="150" Width="300"
@@ -38,4 +40,4 @@
                     Foreground="White"/>
         </StackPanel>
     </Grid>
-</Window> 
+</local:ModernWindow> 

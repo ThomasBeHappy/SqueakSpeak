@@ -7,9 +7,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Media;
+using SqueakIDE.Windows;
 
 namespace SqueakIDE;
-public partial class ConsoleWindow : Window
+public partial class ConsoleWindow : ModernWindow
 {
     private TextWriter _originalOut;
     private TextReader _originalIn;

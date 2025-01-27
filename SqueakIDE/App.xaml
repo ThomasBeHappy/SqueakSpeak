@@ -75,6 +75,143 @@
             <Style TargetType="MenuItem">
                 <Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}"/>
             </Style>
+
+            <!-- Modern Window Style -->
+            <Style x:Key="ModernWindowStyle" TargetType="{x:Type Window}">
+                <Style.Resources>
+                    <!-- Window Button Style -->
+                    <Style x:Key="WindowButtonStyle" TargetType="Button">
+                        <Setter Property="Width" Value="46"/>
+                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Style.Resources>
+
+                <Setter Property="WindowChrome.WindowChrome">
+                    <Setter.Value>
+                        <WindowChrome 
+                            CaptionHeight="0"
+                            ResizeBorderThickness="6"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="WindowStyle" Value="None"/>
+                <Setter Property="AllowsTransparency" Value="True"/>
+                <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Window}">
+                            <Border x:Name="WindowBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Title Bar -->
+                                    <Grid x:Name="PART_TitleBar" 
+                                          Background="{DynamicResource BackgroundBrush}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Window Title -->
+                                        <TextBlock Text="{TemplateBinding Title}"
+                                                 Margin="10,0,0,0"
+                                                 VerticalAlignment="Center"
+                                                 Foreground="{DynamicResource ForegroundBrush}"/>
+
+                                        <!-- Window Buttons -->
+                                        <StackPanel Grid.Column="1" 
+                                                  Orientation="Horizontal">
+                                            <Button x:Name="MinimizeButton"
+                                                    Content="—"
+                                                    Width="46" Height="30"
+                                                    Style="{StaticResource WindowButtonStyle}"/>
+                                            <Button x:Name="MaximizeButton"
+                                                    Content="☐"
+                                                    Width="46" Height="30"
+                                                    Style="{StaticResource WindowButtonStyle}"/>
+                                            <Button x:Name="CloseButton"
+                                                    Content="✕"
+                                                    Width="46" Height="30"
+                                                    Style="{StaticResource WindowButtonStyle}"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Content -->
+                                    <ContentPresenter Grid.Row="1"/>
+                                    
+                                    <!-- Resize Grip -->
+                                    <ResizeGrip x:Name="WindowResizeGrip" 
+                                               Grid.Row="1"
+                                               HorizontalAlignment="Right" 
+                                               VerticalAlignment="Bottom" 
+                                               Visibility="Collapsed"
+                                               IsTabStop="False"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="ResizeMode" Value="CanResizeWithGrip">
+                                    <Setter TargetName="WindowResizeGrip" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="WindowState" Value="Maximized">
+                                    <Setter TargetName="WindowBorder" Property="BorderThickness" Value="0"/>
+                                    <Setter TargetName="WindowResizeGrip" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Window Control Button Style -->
+            <Style x:Key="WindowControlButton" TargetType="Button">
+                <Setter Property="Width" Value="45"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                <Setter Property="FontFamily" Value="Segoe UI"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

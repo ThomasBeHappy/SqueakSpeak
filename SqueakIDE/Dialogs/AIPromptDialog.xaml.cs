@@ -1,7 +1,8 @@
 using System.Windows;
+using SqueakIDE.Windows;
 
 namespace SqueakIDE.Dialogs;
-public partial class AIPromptDialog : Window
+public partial class AIPromptDialog : ModernWindow
 {
     public string UserPrompt => PromptBox.Text;
 
