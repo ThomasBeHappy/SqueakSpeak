@@ -18,6 +18,8 @@ Welcome to SqueakSpeak, the most adorable programming language ever created! �
   - 💝 Code validation with love
   - 🌸 Adorable project management
   - 📑 Multiple file support (like having many cheese storage rooms!)
+  - 🎯 Extension support for even more mouse magic
+  - 🎨 Customizable themes for every mouse's mood
 
 - **🐁 Mouse Party Features**
   - 💕 Share your code with mouse friends in real-time
@@ -71,6 +73,9 @@ MyObject->version = 11;
 Squeak "Updated Version: " + MyObject->version; 
 ```
 
+### Syntax Guide
+Check out our [Syntax Guide](docs/SYNTAX.md) to learn how to write SqueakSpeak code!
+
 ## 🏰 Our Mouse Castle Blueprint
 
 - 🧀 **Squeak**: Where all the mouse magic happens
@@ -99,3 +104,5 @@ We love making new mouse friends! Feel free to bring your ideas to our nest.
 ## 🏡 Find Our Mouse House
 
 Come visit us at: https://github.com/ThomasBeHappy/SqueakSpeak
+
+
