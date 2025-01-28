@@ -7,7 +7,7 @@
     xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
     xmlns:docking="http://schemas.xceed.com/wpf/xaml/avalondock"
     xmlns:converters="SqueakIDE.Converters"
-    xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions" mc:Ignorable="d" Title="Squeak IDE" Height="800" Width="1200" WindowStyle="None" AllowsTransparency="True" Background="{DynamicResource BackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" UseLayoutRounding="True" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip">
+    xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions" xmlns:local="clr-namespace:SqueakIDE.Controls" mc:Ignorable="d" Title="Squeak IDE" Height="800" Width="1200" WindowStyle="None" AllowsTransparency="True" Background="{DynamicResource BackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" UseLayoutRounding="True" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
@@ -296,6 +296,9 @@
                 <StackPanel Orientation="Horizontal" Margin="5,2">
                     <!-- Left-aligned buttons -->
                     <Button Content="Run" Click="RunCode" Style="{StaticResource ToolBarButtonStyle}"/>
+                    <Rectangle Width="1" Margin="5,0" Fill="{DynamicResource BorderBrush}"/>
+                    <local:DebugToolbar x:Name="DebugToolbar"/>
+                    <Rectangle Width="1" Margin="5,0" Fill="{DynamicResource BorderBrush}"/>
                     <ComboBox x:Name="LogLevelComboBox" Width="100" SelectedIndex="0" SelectionChanged="LogLevel_SelectionChanged" Style="{StaticResource ToolBarComboBoxStyle}">
                         <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Error</ComboBoxItem>
                         <ComboBoxItem Style="{StaticResource ToolBarComboBoxItemStyle}">Warning</ComboBoxItem>
@@ -553,6 +556,28 @@
                                                 </Grid>
                                             </Grid>
                                         </Border>
+                                    </avalonDock:LayoutAnchorable>
+                                </avalonDock:LayoutAnchorablePane>
+                            </avalonDock:LayoutAnchorablePaneGroup>
+
+                            <!-- Debug Panel -->
+                            <avalonDock:LayoutAnchorablePaneGroup DockWidth="300">
+                                <avalonDock:LayoutAnchorablePane>
+                                    <avalonDock:LayoutAnchorable Title="Debug" CanHide="True">
+                                        <Grid x:Name="DebugOverlay" Visibility="Collapsed">
+                                            <Border x:Name="DebugHighlight" 
+                                                    Background="#20000000" 
+                                                    VerticalAlignment="Top" 
+                                                    Height="20"/>
+                                            <StackPanel>
+                                                <GroupBox Header="Variables">
+                                                    <ListView x:Name="VariablesView" Height="200"/>
+                                                </GroupBox>
+                                                <GroupBox Header="Call Stack">
+                                                    <ListView x:Name="CallStackView"/>
+                                                </GroupBox>
+                                            </StackPanel>
+                                        </Grid>
                                     </avalonDock:LayoutAnchorable>
                                 </avalonDock:LayoutAnchorablePane>
                             </avalonDock:LayoutAnchorablePaneGroup>

@@ -11,6 +11,7 @@ using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Squeak;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
 {
@@ -31,24 +32,38 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
     private readonly HashSet<string> importedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
     // The directory from which this file was loaded, so relative imports can work
-    private readonly string currentDirectory;
+    private string currentDirectory;
 
     // If you want to do async networking, you might store an HttpClient globally
     private static readonly HttpClient httpClient = new HttpClient();
 
     private readonly ILogger<SqueakSpeakInterpreterVisitor> logger;
+    private readonly IDebuggerService _debugService;
 
     // ------------------------------------------------------
     // CONSTRUCTOR
     // ------------------------------------------------------
     public SqueakSpeakInterpreterVisitor(Dictionary<string, object> memory,
                                          string currentDirectory = "",
-                                         ILogger<SqueakSpeakInterpreterVisitor> logger = null)
+                                         ILogger<SqueakSpeakInterpreterVisitor> logger = null,
+                                         IDebuggerService debugService = null)
     {
         // If no dictionary provided, make a new one
         this.memory = memory ?? new Dictionary<string, object>();
         this.currentDirectory = currentDirectory;
         this.logger = logger;
+        _debugService = debugService;
+    }
+
+
+    public void ResetMemory(Dictionary<string, object> memory)
+    {
+        this.memory = memory;
+    }
+
+    public void SetCurrentPath(string path)
+    {
+        currentDirectory = path;
     }
 
     // -------------------------------------------------------
@@ -57,15 +72,37 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
     // -------------------------------------------------------
     public override object VisitProgram(SqueakSpeakParser.ProgramContext context)
     {
-        logger.LogInformation("=== Starting SqueakSpeak Program ===");
-
-        // Visit each child statement in order
-        foreach (var stmt in context.adorableStatement())
+        try
         {
-            Visit(stmt);
-        }
+            logger.LogInformation("=== Starting SqueakSpeak Program ===");
 
-        logger.LogInformation("=== End of SqueakSpeak Program ===");
+            // Visit each child statement in order
+            foreach (var stmt in context.adorableStatement())
+            {
+                // Check breakpoints before each statement
+                if (_debugService != null)
+                {
+                    var line = stmt.Start.Line;
+                    var variables = memory.Select(kv => new DebugVariable 
+                    { 
+                        Name = kv.Key, 
+                        Value = kv.Value,
+                        Type = kv.Value?.GetType()
+                    });
+                    var stack = new StackTrace().GetFrames();
+                    _debugService.CheckBreakpoint(line, variables, stack);
+                }
+                
+                Visit(stmt);
+            }
+
+            logger.LogInformation("=== End of SqueakSpeak Program ===");
+        }
+        catch (Exception ex)
+        {
+            _debugService?.ReportException(ex);
+            throw;
+        }
         return null;
     }
 

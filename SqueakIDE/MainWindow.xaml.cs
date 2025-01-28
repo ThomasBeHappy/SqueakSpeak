@@ -43,6 +43,7 @@ using SqueakIDE.Models;
 using SqueakIDE.Themes;
 using SqueakIDE.Extensions;
 using SqueakIDE.Settings;
+using SqueakIDE.Debugging;
 
 namespace SqueakIDE
 {
@@ -78,6 +79,9 @@ namespace SqueakIDE
         private readonly ExtensionHost _extensionHost;
         private MouseTrail _mouseTrail;
         private IDESettings _settings;
+        private SqueakDebugger _debugger;
+        private DebugVisualizer _debugVisualizer;
+        private readonly SqueakSpeakInterpreterVisitor _interpreter;
 
         private class SearchResult
         {
@@ -121,6 +125,23 @@ namespace SqueakIDE
 
             // Subscribe to the Loaded event
             this.Loaded += MainWindow_Loaded;
+
+            var debugService = new SqueakDebuggerService(_interpreter);
+            _interpreter = new SqueakSpeakInterpreterVisitor(
+                new Dictionary<string, object>(), 
+                "", 
+                _loggerFactory?.CreateLogger<SqueakSpeakInterpreterVisitor>(),
+                (Squeak.IDebuggerService)debugService
+            );
+            _debugger = new SqueakDebugger(debugService, DebugOverlay, DebugHighlight, VariablesView, CallStackView);
+            DebugToolbar.DataContext = new DebugCommands(_debugger, debugService);
+            
+            _debugVisualizer = new DebugVisualizer(
+                DebugOverlay,
+                DebugHighlight,
+                VariablesView,
+                CallStackView
+            );
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -157,6 +178,13 @@ namespace SqueakIDE
         {
             DockingManager.Theme = new VS2010Theme();
             DockingManager.Foreground = Brushes.White;
+            
+            _debugVisualizer = new DebugVisualizer(DebugOverlay, DebugHighlight, VariablesView, CallStackView);
+            var debugService = new SqueakDebuggerService(_interpreter);
+            _debugger = new SqueakDebugger(debugService, DebugOverlay, DebugHighlight, VariablesView, CallStackView);
+            
+            // Set DataContext for the XAML-defined toolbar
+            DebugToolbar.DataContext = new DebugCommands(_debugger, debugService);
         }
 
         #region File Management
@@ -405,6 +433,21 @@ namespace SqueakIDE
             editor.KeyDown += Editor_KeyDown;
 
             new AutoClosingBrackets(editor.TextArea);
+
+            // Add breakpoint margin
+            var breakpointMargin = new BreakpointMargin(editor);
+            editor.TextArea.LeftMargins.Insert(0, breakpointMargin);
+
+            breakpointMargin.MouseDown += async (s, e) =>
+            {
+                var line = editor.GetLineFromMousePosition(e.GetPosition(editor));
+                if (line >= 0)
+                {
+                    var breakpoint = new Breakpoint { Line = line };
+                    await _debugger.ToggleBreakpoint(breakpoint);
+                    breakpointMargin.ToggleBreakpoint(line);
+                }
+            };
         }
 
         private void ConfigureSyntaxHighlighting(ICSharpCode.AvalonEdit.TextEditor editor)
@@ -538,24 +581,21 @@ namespace SqueakIDE
         {
             try
             {
-                if (_consoleWindow == null || !_consoleWindow.IsLoaded)
-                {
-                    _consoleWindow = new ConsoleWindow();
-                    _consoleWindow.Show();
-                }
-                else
-                {
-                    _consoleWindow.Focus();
-                }
-
                 if (TryGetCurrentEditor(out var editor, out _))
                 {
-                    _consoleWindow.Clear();
-
-                    // Capture the text before running the task
                     string codeText = editor.Text;
+                    await _debugger.StartDebugging();
 
-                    // Run the code execution on a background thread
+                    // Create console window on UI thread
+                    if (_consoleWindow == null)
+                    {
+                        Dispatcher.Invoke(() => {
+                            _consoleWindow = new ConsoleWindow();
+                            _consoleWindow.Closed += ConsoleWindow_Closed; // Subscribe to the Closed event
+                            _consoleWindow.Show();
+                        });
+                    }
+
                     await Task.Run(() =>
                     {
                         var inputStream = new AntlrInputStream(codeText);
@@ -563,18 +603,28 @@ namespace SqueakIDE
                         var tokens = new CommonTokenStream(lexer);
                         var parser = new SqueakSpeakParser(tokens);
                         var tree = parser.program();
-                        var sharedMemory = new Dictionary<string, object>();
 
-                        var logger = _loggerFactory.CreateLogger<SqueakSpeakInterpreterVisitor>();
-                        var interpreter = new SqueakSpeakInterpreterVisitor(sharedMemory, CurrentFilePath ?? string.Empty, logger);
-                        interpreter.Visit(tree);
+                        try 
+                        {
+                            _interpreter.Visit(tree);
+                        }
+                        catch (Exception ex)
+                        {
+                            _debugger.OnExceptionThrown(this, new Debugging.ExceptionEventArgs { Exception = ex });
+                            throw;
+                        }
                     });
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void ConsoleWindow_Closed(object sender, EventArgs e)
+        {
+            _consoleWindow = null;
         }
 
         private void ValidateCode(object sender, RoutedEventArgs e)
