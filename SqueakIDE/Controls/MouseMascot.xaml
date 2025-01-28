@@ -1,0 +1,29 @@
+<UserControl x:Class="SqueakIDE.Controls.MouseMascot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="64" Height="64">
+    <Grid>
+        <Image x:Name="MouseImage" 
+               RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="MouseScale"/>
+                    <RotateTransform x:Name="MouseRotation"/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        
+        <Border x:Name="SpeechBubble" 
+                Background="#F0F0F0" 
+                BorderBrush="#404040" 
+                BorderThickness="1" 
+                CornerRadius="10" 
+                Padding="8,4"
+                Visibility="Collapsed"
+                MaxWidth="200">
+            <TextBlock x:Name="SpeechText" 
+                      TextWrapping="Wrap"
+                      FontSize="12"/>
+        </Border>
+    </Grid>
+</UserControl> 

@@ -20,6 +20,7 @@ Welcome to SqueakSpeak, the most adorable programming language ever created! �
   - 📑 Multiple file support (like having many cheese storage rooms!)
   - 🎯 Extension support for even more mouse magic
   - 🎨 Customizable themes for every mouse's mood
+  - 🐾 Adorable paw print trail that follows your mouse cursor
 
 - **🐁 Mouse Party Features**
   - 💕 Share your code with mouse friends in real-time

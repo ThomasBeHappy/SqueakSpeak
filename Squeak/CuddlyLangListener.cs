@@ -567,21 +567,6 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
         return value;
     }
 
-    private object ParseArrayLiteral(string text)
-    {
-        string content = text.Substring(1, text.Length - 2);
-        var items = content.Split(',').Select(item => 
-        {
-            item = item.Trim();
-            if (item.StartsWith("\"") && item.EndsWith("\""))
-                return item.Substring(1, item.Length - 2);
-            if (double.TryParse(item, NumberStyles.Any, CultureInfo.InvariantCulture, out double num))
-                return num;
-            return memory.ContainsKey(item) ? memory[item] : item;
-        }).ToList<object>();
-        return items;
-    }
-
     private object ApplyOperator(object left, string op, object right)
     {
         logger.LogDebug("===== Starting ApplyOperator =====");

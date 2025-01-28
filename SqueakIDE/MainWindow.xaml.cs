@@ -42,6 +42,7 @@ using System.Windows.Interop;
 using SqueakIDE.Models;
 using SqueakIDE.Themes;
 using SqueakIDE.Extensions;
+using SqueakIDE.Settings;
 
 namespace SqueakIDE
 {
@@ -75,6 +76,8 @@ namespace SqueakIDE
         private double _defaultTop;
         private readonly ExtensionManager _extensionManager;
         private readonly ExtensionHost _extensionHost;
+        private MouseTrail _mouseTrail;
+        private IDESettings _settings;
 
         private class SearchResult
         {
@@ -124,6 +127,7 @@ namespace SqueakIDE
         {
             InitializeLoggerFactory();
             InitializeThemeMenu();
+            InitializeMouseTrail();
 
             // Load extensions after window is fully loaded
             var extensionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Extensions");
@@ -131,6 +135,13 @@ namespace SqueakIDE
             {
                 _extensionManager.LoadExtensions(extensionsPath);
             }
+        }
+
+        private void InitializeMouseTrail()
+        {
+            _settings = IDESettings.Load();
+            _mouseTrail = new MouseTrail();
+            OverlayCanvas.Children.Add(_mouseTrail);
         }
 
         private void InitializeLoggerFactory()
@@ -2074,6 +2085,17 @@ namespace SqueakIDE
         private void RefreshOpenEditors()
         {
             UpdateEditorTheme();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SettingsDialog(_settings);
+            if (dialog.ShowDialog() == true)
+            {
+                _settings = dialog.Settings;
+                _settings.Save();
+                _mouseTrail.Clear(); // Reset trail with new settings
+            }
         }
     }
 }

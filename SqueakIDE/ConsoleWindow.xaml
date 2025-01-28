@@ -3,6 +3,7 @@
         xmlns:local="clr-namespace:SqueakIDE.Windows"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Style="{StaticResource ModernWindowStyle}"
         Title="SqueakSpeak Console" Height="400" Width="600"
         Background="#0C0C0C">
     <Grid>

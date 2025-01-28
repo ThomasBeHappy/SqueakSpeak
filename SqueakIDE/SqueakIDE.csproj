@@ -8,7 +8,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\keyword.png" />
+    <None Remove="Resources\Mascot\spritesheet.png" />
     <None Remove="Resources\method.png" />
+    <None Remove="Resources\paw.png" />
     <None Remove="Resources\snippet.png" />
     <None Remove="Resources\SqueakIDE_Logo.ico" />
     <None Remove="Resources\variable.png" />
@@ -31,7 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\keyword.png" />
+    <EmbeddedResource Include="Resources\Mascot\spritesheet.png" />
     <EmbeddedResource Include="Resources\method.png" />
+    <EmbeddedResource Include="Resources\paw.png" />
     <EmbeddedResource Include="Resources\snippet.png" />
     <EmbeddedResource Include="Resources\variable.png" />
     <EmbeddedResource Include="SqueakHighlighting.xshd">
