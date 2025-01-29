@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Squeak;
 public interface IDebuggerService
 {
-    void CheckBreakpoint(int line, IEnumerable<DebugVariable> variables, StackFrame[] callStack);
+    void CheckBreakpoint(int line, IEnumerable<DebugVariable> variables, SqueakStackFrame[] callStack);
     void ReportException(Exception ex);
 }
 

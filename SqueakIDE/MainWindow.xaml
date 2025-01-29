@@ -7,7 +7,7 @@
     xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
     xmlns:docking="http://schemas.xceed.com/wpf/xaml/avalondock"
     xmlns:converters="SqueakIDE.Converters"
-    xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions" xmlns:local="clr-namespace:SqueakIDE.Controls" mc:Ignorable="d" Title="Squeak IDE" Height="800" Width="1200" WindowStyle="None" AllowsTransparency="True" Background="{DynamicResource BackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" UseLayoutRounding="True" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip">
+    xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions" xmlns:local="clr-namespace:SqueakIDE.Controls" xmlns:sys="clr-namespace:System.Windows.Data;assembly=PresentationFramework" mc:Ignorable="d" Title="Squeak IDE" Height="800" Width="1200" WindowStyle="None" AllowsTransparency="True" Background="{DynamicResource BackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" UseLayoutRounding="True" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
@@ -269,6 +269,77 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <Style x:Key="ExpanderStyle" TargetType="Expander">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <StackPanel>
+                            <ToggleButton IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Padding="0"
+                                    IsHitTestVisible="True"
+                                    Cursor="Hand">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Grid Background="Transparent" IsHitTestVisible="True">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ContentPresenter Grid.Column="0" 
+                                                        Content="{Binding Header, 
+                                                        RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                        VerticalAlignment="Center"
+                                                        IsHitTestVisible="True"/>
+                                        <Path x:Name="arrow" 
+                                             Grid.Column="1"
+                                             Margin="4,0,0,0"
+                                             Fill="{DynamicResource ForegroundBrush}"
+                                             Data="M 0 0 L 4 4 L 8 0 Z"
+                                             Width="8"
+                                             Height="4"
+                                             IsHitTestVisible="True"
+                                             VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="arrow" Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="180" CenterX="4" CenterY="2"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="arrow" Property="Fill" Value="{DynamicResource HoverForegroundBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                        <ContentPresenter x:Name="ExpanderContent"
+                                        Visibility="{TemplateBinding IsExpanded, 
+                                                   Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Margin="8,4,0,0"
+                                        Content="{TemplateBinding Content}"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+        <Style x:Key="DetailTextStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+
+        <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
     </Window.Resources>
     <Grid>
@@ -567,10 +638,146 @@
                                         <Grid x:Name="DebugOverlay" Visibility="Collapsed">
                                             <StackPanel>
                                                 <GroupBox Header="Variables">
-                                                    <ListView x:Name="VariablesView" Height="200"/>
+                                                    <ListView x:Name="VariablesView" 
+                                                              Height="200" 
+                                                              Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                                              Foreground="{DynamicResource ForegroundBrush}" 
+                                                              BorderThickness="0">
+                                                        <ListView.ItemContainerStyle>
+                                                            <Style TargetType="ListViewItem">
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                                <Setter Property="Padding" Value="10,2"/>
+                                                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                                                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown"/>
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                        <Setter Property="Background" Value="{DynamicResource SelectionBackgroundBrush}"/>
+                                                                        <Setter Property="Foreground" Value="{DynamicResource SelectionForegroundBrush}"/>
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                                                                        <Setter Property="Foreground" Value="{DynamicResource HoverForegroundBrush}"/>
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ListView.ItemContainerStyle>
+                                                        <ListView.Resources>
+                                                            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+                                                            <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+                                                            <Style x:Key="ExpanderStyle" TargetType="Expander">
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                                                                <Setter Property="Margin" Value="0"/>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="Expander">
+                                                                            <StackPanel>
+                                                                                <ToggleButton IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                                            Background="Transparent"
+                                                                                            BorderThickness="0"
+                                                                                            Padding="0"
+                                                                                            IsHitTestVisible="True"
+                                                                                            Cursor="Hand">
+                                                                                    <ToggleButton.Template>
+                                                                                        <ControlTemplate TargetType="ToggleButton">
+                                                                                            <Grid Background="Transparent" IsHitTestVisible="True">
+                                                                                                <Grid.ColumnDefinitions>
+                                                                                                    <ColumnDefinition Width="*"/>
+                                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                                </Grid.ColumnDefinitions>
+                                                                                                <ContentPresenter Grid.Column="0" 
+                                                                                                                Content="{Binding Header, 
+                                                                                                                RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                                                                                VerticalAlignment="Center"
+                                                                                                                IsHitTestVisible="True"/>
+                                                                                                <Path x:Name="arrow" 
+                                                                                                     Grid.Column="1"
+                                                                                                     Margin="4,0,0,0"
+                                                                                                     Fill="{DynamicResource ForegroundBrush}"
+                                                                                                     Data="M 0 0 L 4 4 L 8 0 Z"
+                                                                                                     Width="8"
+                                                                                                     Height="4"
+                                                                                                     IsHitTestVisible="True"
+                                                                                                     VerticalAlignment="Center"/>
+                                                                                            </Grid>
+                                                                                            <ControlTemplate.Triggers>
+                                                                                                <Trigger Property="IsChecked" Value="True">
+                                                                                                    <Setter TargetName="arrow" Property="RenderTransform">
+                                                                                                        <Setter.Value>
+                                                                                                            <RotateTransform Angle="180" CenterX="4" CenterY="2"/>
+                                                                                                        </Setter.Value>
+                                                                                                    </Setter>
+                                                                                                </Trigger>
+                                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                                    <Setter TargetName="arrow" Property="Fill" Value="{DynamicResource HoverForegroundBrush}"/>
+                                                                                                </Trigger>
+                                                                                            </ControlTemplate.Triggers>
+                                                                                        </ControlTemplate>
+                                                                                    </ToggleButton.Template>
+                                                                                </ToggleButton>
+                                                                                <ContentPresenter x:Name="ExpanderContent"
+                                                                                                Visibility="{TemplateBinding IsExpanded, 
+                                                                                                           Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                                                                Margin="8,4,0,0"
+                                                                                                Content="{TemplateBinding Content}"/>
+                                                                            </StackPanel>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                            <Style x:Key="DetailTextStyle" TargetType="TextBlock">
+                                                                <Setter Property="Margin" Value="0,2"/>
+                                                                <Setter Property="Opacity" Value="0.9"/>
+                                                            </Style>
+                                                        </ListView.Resources>
+                                                        <ListView.View>
+                                                            <GridView>
+                                                                <GridView.ColumnHeaderContainerStyle>
+                                                                    <Style TargetType="GridViewColumnHeader">
+                                                                        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+                                                                        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                                                                        <Setter Property="Padding" Value="10,5"/>
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                                                                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                                                    </Style>
+                                                                </GridView.ColumnHeaderContainerStyle>
+                                                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="100"/>
+                                                                <GridViewColumn Header="Value">
+                                                                    <GridViewColumn.CellTemplate>
+                                                                        <DataTemplate>
+                                                                            <Grid>
+                                                                                <Expander Style="{StaticResource ExpanderStyle}"
+                                                                                         Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                                                         HorizontalAlignment="Center">
+                                                                                    <Expander.Header>
+                                                                                        <TextBlock Text="{Binding ValueSummary}" 
+                                                                                                 Foreground="{DynamicResource ForegroundBrush}"
+                                                                                                 TextAlignment="Center"/>
+                                                                                    </Expander.Header>
+                                                                                    <ItemsControl ItemsSource="{Binding Details}" Margin="10,0,0,0">
+                                                                                        <ItemsControl.ItemTemplate>
+                                                                                            <DataTemplate>
+                                                                                                <TextBlock Style="{StaticResource DetailTextStyle}">
+                                                                                                    <Run Text="{Binding Key, Mode=OneWay}" FontWeight="SemiBold"/>
+                                                                                                    <Run Text=": "/>
+                                                                                                    <Run Text="{Binding Value, Mode=OneWay}"/>
+                                                                                                </TextBlock>
+                                                                                            </DataTemplate>
+                                                                                        </ItemsControl.ItemTemplate>
+                                                                                    </ItemsControl>
+                                                                                </Expander>
+                                                                            </Grid>
+                                                                        </DataTemplate>
+                                                                    </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
+                                                            </GridView>
+                                                        </ListView.View>
+                                                    </ListView>
                                                 </GroupBox>
                                                 <GroupBox Header="Call Stack">
-                                                    <ListView x:Name="CallStackView"/>
+                                                    <ListView x:Name="CallStackView" Background="{DynamicResource SecondaryBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}" BorderThickness="0"/>
                                                 </GroupBox>
                                             </StackPanel>
                                         </Grid>

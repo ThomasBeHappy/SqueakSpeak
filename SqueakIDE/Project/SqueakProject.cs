@@ -11,6 +11,8 @@ namespace SqueakIDE.Project
         public List<string> SourceFiles { get; set; } = new();
         public List<string> References { get; set; } = new();
         public Dictionary<string, string> Settings { get; set; } = new();
+        public string EditorLayout { get; set; }
+        public List<string> OpenFiles { get; set; } = new List<string>();
 
         public static SqueakProject Create(string name, string path)
         {

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
 using ICSharpCode.AvalonEdit;
+using System.Collections;
 
 namespace SqueakIDE.Debugging;
 public class DebugVisualizer
@@ -81,17 +82,72 @@ public class DebugVisualizer
     public void UpdateVariables(IEnumerable<DebugVariable> variables)
     {
         _variablesView.Dispatcher.Invoke(() => 
-            _variablesView.ItemsSource = variables);
+            _variablesView.ItemsSource = variables.Select(v => new
+            {
+                Name = v.Name,
+                ValueSummary = GetValueSummary(v.Value),
+                HasDetails = HasExpandableDetails(v.Value),
+                Details = GetValueDetails(v.Value),
+                Type = FormatType(v.Type)
+            }));
+    }
+
+    private bool HasExpandableDetails(object value)
+    {
+        return value is IDictionary || (value is IEnumerable && !(value is string));
+    }
+
+    private string GetValueSummary(object value)
+    {
+        if (value == null) return "null";
+        if (value is IDictionary dict)
+            return $"{{{dict.Count} items}}";
+        if (value is IEnumerable<object> list && !(value is string))
+            return $"[{list.Count()} items]";
+        return value.ToString();
+    }
+
+    private IEnumerable<KeyValuePair<string, string>> GetValueDetails(object value)
+    {
+        if (value is IDictionary dict)
+        {
+            foreach (DictionaryEntry entry in dict)
+            {
+                yield return new KeyValuePair<string, string>(
+                    entry.Key.ToString(),
+                    GetValueSummary(entry.Value)
+                );
+            }
+        }
+        else if (value is IEnumerable<object> list && !(value is string))
+        {
+            int index = 0;
+            foreach (var item in list)
+            {
+                yield return new KeyValuePair<string, string>(
+                    $"[{index}]",
+                    GetValueSummary(item)
+                );
+                index++;
+            }
+        }
+    }
+
+    private string FormatType(Type type)
+    {
+        if (type == null) return "unknown";
+        return type.Name.Replace("Dictionary`2", "Dictionary")
+                   .Replace("List`1", "List");
     }
     
-    public void UpdateCallStack(StackFrame[] callStack)
+    public void UpdateCallStack(SqueakStackFrame[] callStack)
     {
         _callStackView.Dispatcher.Invoke(() => 
             _callStackView.ItemsSource = callStack.Select(frame => new
             {
-                Method = frame.GetMethod()?.Name ?? "Unknown",
-                File = System.IO.Path.GetFileName(frame.GetFileName() ?? "Unknown"),
-                Line = frame.GetFileLineNumber()
+                Method = frame.MethodName,
+                File = System.IO.Path.GetFileName(frame.FileName ?? "Unknown"),
+                Line = frame.Line
             }));
     }
     

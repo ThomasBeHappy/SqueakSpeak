@@ -40,19 +40,25 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
     private readonly ILogger<SqueakSpeakInterpreterVisitor> logger;
     private readonly IDebuggerService _debugService;
 
+    private Stack<SqueakStackFrame> _callStack = new Stack<SqueakStackFrame>();
+
+    private string currentFile;
+
     // ------------------------------------------------------
     // CONSTRUCTOR
     // ------------------------------------------------------
     public SqueakSpeakInterpreterVisitor(Dictionary<string, object> memory,
                                          string currentDirectory = "",
                                          ILogger<SqueakSpeakInterpreterVisitor> logger = null,
-                                         IDebuggerService debugService = null)
+                                         IDebuggerService debugService = null,
+                                         string path = null)
     {
         // If no dictionary provided, make a new one
         this.memory = memory ?? new Dictionary<string, object>();
         this.currentDirectory = currentDirectory;
         this.logger = logger;
         _debugService = debugService;
+        currentFile = path;
     }
 
 
@@ -72,6 +78,8 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
     // -------------------------------------------------------
     public override object VisitProgram(SqueakSpeakParser.ProgramContext context)
     {
+        EnterMethod("Program", context.Start.Line);
+        
         try
         {
             logger.LogInformation("=== Starting SqueakSpeak Program ===");
@@ -89,8 +97,7 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
                         Value = kv.Value,
                         Type = kv.Value?.GetType()
                     });
-                    var stack = new StackTrace().GetFrames();
-                    _debugService.CheckBreakpoint(line, variables, stack);
+                    _debugService.CheckBreakpoint(line, variables, _callStack.ToArray());
                 }
                 
                 Visit(stmt);
@@ -103,6 +110,7 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
             _debugService?.ReportException(ex);
             throw;
         }
+        ExitMethod();
         return null;
     }
 
@@ -425,7 +433,8 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
     public override object VisitFluffMagic(SqueakSpeakParser.FluffMagicContext context)
     {
         string funcName = context.ID().GetText();
-
+        EnterMethod(funcName, context.Start.Line);
+        
         // Save the function body (context) in memory for later invocation
         if (memory.ContainsKey(funcName))
         {
@@ -435,6 +444,7 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
         memory[funcName] = context;
         logger.LogInformation("[Function definition] -> {FunctionName}", funcName);
 
+        ExitMethod();
         return null;
     }
 
@@ -740,11 +750,13 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
     public override object VisitInvokeWhimsy(SqueakSpeakParser.InvokeWhimsyContext context)
     {
         string funcName = context.ID().GetText();
-
+        EnterMethod(funcName, context.Start.Line);
+        
         // Check if the function exists
         if (!memory.ContainsKey(funcName))
         {
             logger.LogWarning("[Warning] Function '{FunctionName}' is not defined!", funcName);
+            ExitMethod();
             return null;
         }
 
@@ -801,20 +813,22 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
                 {
                     // Restore the previous memory state
                     memory = previousMemory;
+                    ExitMethod();
                     return returnValue;  // Return the actual value, not wrapped in ReturnValue
                 }
             }
 
             // Restore the previous memory state
             memory = previousMemory;
+            ExitMethod();
             return result;
         }
         else
         {
             logger.LogWarning("[Warning] '{FunctionName}' is not a callable function!", funcName);
+            ExitMethod();
+            return null;
         }
-
-        return null;
     }
 
 
@@ -1225,5 +1239,23 @@ public class SqueakSpeakInterpreterVisitor : SqueakSpeakBaseVisitor<object>
         
         logger.LogWarning("[Parameter Evaluation] No value found for parameter");
         return null;
+    }
+
+    // When entering a method/block:
+    public void EnterMethod(string methodName, int line)
+    {
+        _callStack.Push(new SqueakStackFrame 
+        { 
+            MethodName = methodName,
+            Line = line,
+            FileName = currentFile // You'll need to track this
+        });
+    }
+
+    // When exiting a method/block:
+    public void ExitMethod()
+    {
+        if (_callStack.Count > 0)
+            _callStack.Pop();
     }
 }

@@ -18,7 +18,7 @@ public interface IDebuggerService
     Task StepOut();
     Task Continue();
     Task Stop();
-    void CheckBreakpoint(int line, IEnumerable<DebugVariable> variables, StackFrame[] callStack);
+    void CheckBreakpoint(int line, IEnumerable<DebugVariable> variables, SqueakStackFrame[] callStack);
     void ReportException(Exception ex);
 }
 
@@ -26,7 +26,7 @@ public class BreakpointEventArgs : EventArgs
 {
     public int LineNumber { get; set; }
     public IEnumerable<DebugVariable> LocalVariables { get; set; }
-    public StackFrame[] CallStack { get; set; }
+    public SqueakStackFrame[] CallStack { get; set; }
 }
 
 public class ExceptionEventArgs : EventArgs

@@ -44,6 +44,7 @@ using SqueakIDE.Themes;
 using SqueakIDE.Extensions;
 using SqueakIDE.Settings;
 using SqueakIDE.Debugging;
+using Xceed.Wpf.AvalonDock.Layout.Serialization;
 
 namespace SqueakIDE
 {
@@ -118,6 +119,7 @@ namespace SqueakIDE
                 _defaultLeft = Left;
                 _defaultTop = Top;
             };
+            Closing += Window_Closing;
             InitializeThemeMenu();
 
             _extensionHost = new ExtensionHost(this);
@@ -756,6 +758,84 @@ namespace SqueakIDE
                 _gitManager = new GitManager(project.RootPath);
                 InitializeGit();
                 UpdateProjectExplorer();
+
+                // Load the layout if it exists
+                if (!string.IsNullOrEmpty(project.EditorLayout))
+                {
+                    try
+                    {
+                        string layoutPath = Path.Combine(project.RootPath, project.EditorLayout);
+                        if (File.Exists(layoutPath))
+                        {
+                            var layoutSerializer = new XmlLayoutSerializer(DockingManager);
+                            layoutSerializer.LayoutSerializationCallback += (s, args) =>
+                            {
+                                if (args.Model is LayoutAnchorable anchorable)
+                                {
+                                    switch (anchorable.Title)
+                                    {
+                                        case "Folder Explorer":
+                                            args.Content = FindVisualParent<Border>(FolderExplorer);
+                                            break;
+                                        case "Error List":
+                                            args.Content = FindVisualParent<Border>(ErrorList);
+                                            break;
+                                        case "AI Assistant":
+                                            args.Content = FindVisualParent<Border>(ChatMessages);
+                                            break;
+                                        case "Output":
+                                            args.Content = FindVisualParent<Border>(OutputBox);
+                                            break;
+                                        case "Debug":
+                                        // Get the parent Grid that contains all debug controls
+                                        var debugContent = FindName("DebugOverlay") as Grid;
+                                        if (debugContent != null)
+                                        {
+                                            debugContent.Visibility = Visibility.Visible;
+                                            args.Content = debugContent;
+                                        }
+                                        break;
+
+                                        default:
+                                            args.Cancel = true;
+                                            break;
+                                    }
+                                }
+                                else if (args.Model is LayoutDocument)
+                                {
+                                    // Allow document panes but don't try to restore their content
+                                    args.Cancel = true;
+                                }
+                            };
+
+                            using (var reader = new StreamReader(layoutPath))
+                            {
+                                layoutSerializer.Deserialize(reader);
+                            }
+
+                            // add the editor tabs to the docking manager
+                            EditorTabs = DockingManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
+
+                            // Now load any open files from the project
+                            if (project.OpenFiles != null)
+                            {
+                                foreach (var file in project.OpenFiles)
+                                {
+                                    var fullPath = Path.GetFullPath(Path.Combine(project.RootPath, file));
+                                    if (File.Exists(fullPath))
+                                    {
+                                        OpenFileInEditor(fullPath);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to load layout: {ex.Message}");
+                        DockingManager.Layout = new LayoutRoot();
+                    }
+                }
             }
         }
 
@@ -2140,6 +2220,114 @@ namespace SqueakIDE
                 _settings = dialog.Settings;
                 _settings.Save();
                 _mouseTrail.Clear(); // Reset trail with new settings
+            }
+        }
+
+        private void Expander_MouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button != null)
+            {
+                var expander = button.TemplatedParent as Expander;
+                if (expander != null)
+                {
+                    expander.IsExpanded = !expander.IsExpanded;
+                }
+            }
+        }
+
+        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListViewItem item)
+            {
+                var expander = item.FindVisualChildren<Expander>().FirstOrDefault();
+                if (expander != null)
+                {
+                    expander.IsExpanded = !expander.IsExpanded;
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (CurrentProject != null)
+            {
+                try
+                {
+                    // Save layout to file
+                    string layoutPath = Path.Combine(CurrentProject.RootPath, "layout.xml");
+                    var layoutSerializer = new XmlLayoutSerializer(DockingManager);
+                    layoutSerializer.LayoutSerializationCallback += (s, args) =>
+                    {
+                        if (args.Model.Title == "Folder Explorer" ||
+                            args.Model.Title == "Error List" ||
+                            args.Model.Title == "AI Assistant" ||
+                            args.Model.Title == "Output" ||
+                            args.Model.Title == "Debug")
+                        {
+                            args.Cancel = false;
+                        }
+                        else if (args.Model is LayoutDocument)
+                        {
+                            args.Cancel = true;
+                        }
+                    };
+
+                    using (var writer = new StreamWriter(layoutPath))
+                    {
+                        layoutSerializer.Serialize(writer);
+                    }
+                    
+                    // Save list of open files
+                    var openFiles = DockingManager.Layout.Descendents()
+                        .OfType<LayoutDocument>()
+                        .Select(doc => doc.Title.TrimEnd('*'))
+                        .Where(title => !string.IsNullOrEmpty(title))
+                        .ToList();
+
+                    CurrentProject.OpenFiles = openFiles;
+                    CurrentProject.EditorLayout = "layout.xml";
+                    CurrentProject.Save();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Failed to save layout: {ex.Message}");
+                }
+            }
+        }
+
+        private T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            var parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null) return null;
+            
+            if (parentObject is T parent)
+                return parent;
+                
+            return FindVisualParent<T>(parentObject);
+        }
+    }
+}
+
+public static class VisualTreeHelperExtensions
+{
+    public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : DependencyObject
+    {
+        if (depObj != null)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                if (child != null && child is T)
+                {
+                    yield return (T)child;
+                }
+
+                foreach (T childOfChild in FindVisualChildren<T>(child))
+                {
+                    yield return childOfChild;
+                }
             }
         }
     }

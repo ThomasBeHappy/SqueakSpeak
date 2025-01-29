@@ -12,7 +12,7 @@ public class SqueakDebuggerService : IDebuggerService, Squeak.IDebuggerService
     private TaskCompletionSource<bool> _pauseCompletionSource;
     private DebugStepMode _currentStepMode = DebugStepMode.None;
     private int _currentStackDepth = 0;
-    private StackFrame[] _currentCallStack;
+    private SqueakStackFrame[] _currentCallStack;
     
     private enum DebugStepMode
     {
@@ -112,7 +112,7 @@ public class SqueakDebuggerService : IDebuggerService, Squeak.IDebuggerService
     }
 
     // Interpreter debugger interface implementation
-    public void CheckBreakpoint(int line, IEnumerable<DebugVariable> variables, StackFrame[] callStack)
+    public void CheckBreakpoint(int line, IEnumerable<DebugVariable> variables, SqueakStackFrame[] callStack)
     {
         _currentCallStack = callStack;  // Store the call stack
         if (!_isDebugging) return;
@@ -169,7 +169,7 @@ public class SqueakDebuggerService : IDebuggerService, Squeak.IDebuggerService
         ExceptionThrown?.Invoke(this, new ExceptionEventArgs { Exception = ex });
     }
 
-    public void CheckBreakpoint(int line, IEnumerable<Squeak.DebugVariable> variables, StackFrame[] callStack)
+    public void CheckBreakpoint(int line, IEnumerable<Squeak.DebugVariable> variables, SqueakStackFrame[] callStack)
     {
         CheckBreakpoint(line, variables.Select(v => new DebugVariable { Name = v.Name, Value = v.Value }), callStack);
     }
