@@ -101,6 +101,7 @@ We love making new mouse friends! Feel free to bring your ideas to our nest.
 
 - 📝 Powered by the magical [AvalonEdit](https://github.com/icsharpcode/AvalonEdit)
 - 🌳 Tree-climbing helped by [LibGit2Sharp](https://github.com/libgit2/libgit2sharp)
+- 🤖 AI Powered by [OpenAI](https://github.com/openai/openai-dotnet)
 
 ## 🏡 Find Our Mouse House
 
