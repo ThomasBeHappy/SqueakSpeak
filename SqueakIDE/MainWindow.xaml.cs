@@ -133,15 +133,9 @@ namespace SqueakIDE
                 _loggerFactory?.CreateLogger<SqueakSpeakInterpreterVisitor>(),
                 (Squeak.IDebuggerService)debugService
             );
-            _debugger = new SqueakDebugger(debugService, DebugOverlay, DebugHighlight, VariablesView, CallStackView);
+            _debugVisualizer = new DebugVisualizer(DebugOverlay, DebugHighlight, VariablesView, CallStackView);
+            _debugger = new SqueakDebugger(debugService, _debugVisualizer);
             DebugToolbar.DataContext = new DebugCommands(_debugger, debugService);
-            
-            _debugVisualizer = new DebugVisualizer(
-                DebugOverlay,
-                DebugHighlight,
-                VariablesView,
-                CallStackView
-            );
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -181,7 +175,7 @@ namespace SqueakIDE
             
             _debugVisualizer = new DebugVisualizer(DebugOverlay, DebugHighlight, VariablesView, CallStackView);
             var debugService = new SqueakDebuggerService(_interpreter);
-            _debugger = new SqueakDebugger(debugService, DebugOverlay, DebugHighlight, VariablesView, CallStackView);
+            _debugger = new SqueakDebugger(debugService, _debugVisualizer);
             
             // Set DataContext for the XAML-defined toolbar
             DebugToolbar.DataContext = new DebugCommands(_debugger, debugService);
@@ -583,7 +577,8 @@ namespace SqueakIDE
             {
                 if (TryGetCurrentEditor(out var editor, out _))
                 {
-                    string codeText = editor.Text;
+                    var codeText = editor.Text;
+                    _debugVisualizer.SetCurrentEditor(editor);
                     await _debugger.StartDebugging();
 
                     // Create console window on UI thread

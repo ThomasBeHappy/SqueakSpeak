@@ -4,37 +4,98 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SqueakIDE.Controls">
     <StackPanel Orientation="Horizontal">
-        <Button Command="{Binding StartDebugging}"
-                ToolTip="Start Debugging">
+        <StackPanel.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="ToolTip">
+                <Setter Property="Background" Value="#2D2D30"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#3F3F46"/>
+            </Style>
+        </StackPanel.Resources>
+
+        <Button Command="{Binding StartDebugging}">
+            <Button.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Start Debugging (F5)" FontWeight="Bold"/>
+                        <TextBlock Text="Run the program with debugging enabled"/>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
             <Path Data="M0,0 L8,4 0,8 Z" Fill="#4CAF50" Stretch="Uniform" Width="16" Height="16"/>
         </Button>
         
-        <Separator/>
+        <Separator Margin="5,0"/>
         
-        <Button Command="{Binding StepOver}"
-                ToolTip="Step Over">
+        <Button Command="{Binding StepOver}">
+            <Button.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Step Over (F10)" FontWeight="Bold"/>
+                        <TextBlock Text="Execute the next line, stepping over function calls"/>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
             <Path Data="M0,4 H8 V0 L16,4 L8,8 V4 H0 Z" Fill="#2196F3" Stretch="Uniform" Width="16" Height="16"/>
         </Button>
         
-        <Button Command="{Binding StepInto}"
-                ToolTip="Step Into">
+        <Button Command="{Binding StepInto}">
+            <Button.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Step Into (F11)" FontWeight="Bold"/>
+                        <TextBlock Text="Step into the next function call"/>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
             <Path Data="M8,0 L12,4 H9 V8 H7 V4 H4 Z" Fill="#2196F3" Stretch="Uniform" Width="16" Height="16"/>
         </Button>
         
-        <Button Command="{Binding StepOut}"
-                ToolTip="Step Out">
+        <Button Command="{Binding StepOut}">
+            <Button.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Step Out (Shift+F11)" FontWeight="Bold"/>
+                        <TextBlock Text="Step out of the current function"/>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
             <Path Data="M8,8 L12,4 H9 V0 H7 V4 H4 Z" Fill="#2196F3" Stretch="Uniform" Width="16" Height="16"/>
         </Button>
         
-        <Button Command="{Binding Continue}"
-                ToolTip="Continue">
+        <Button Command="{Binding Continue}">
+            <Button.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Continue (F5)" FontWeight="Bold"/>
+                        <TextBlock Text="Continue execution until the next breakpoint"/>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
             <Path Data="M0,0 L6,4 L0,8 M8,0 L14,4 L8,8" Fill="#4CAF50" Stretch="Uniform" Width="16" Height="16"/>
         </Button>
         
-        <Separator/>
+        <Separator Margin="5,0"/>
         
-        <Button Command="{Binding Stop}"
-                ToolTip="Stop Debugging">
+        <Button Command="{Binding Stop}">
+            <Button.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Stop Debugging (Shift+F5)" FontWeight="Bold"/>
+                        <TextBlock Text="Stop the debugging session"/>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
             <Path Data="M0,0 H8 V8 H0 Z" Fill="#F44336" Stretch="Uniform" Width="16" Height="16"/>
         </Button>
     </StackPanel>

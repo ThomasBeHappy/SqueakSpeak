@@ -565,10 +565,6 @@
                                 <avalonDock:LayoutAnchorablePane>
                                     <avalonDock:LayoutAnchorable Title="Debug" CanHide="True">
                                         <Grid x:Name="DebugOverlay" Visibility="Collapsed">
-                                            <Border x:Name="DebugHighlight" 
-                                                    Background="#20000000" 
-                                                    VerticalAlignment="Top" 
-                                                    Height="20"/>
                                             <StackPanel>
                                                 <GroupBox Header="Variables">
                                                     <ListView x:Name="VariablesView" Height="200"/>
@@ -623,6 +619,13 @@
             </avalonDock:DockingManager>
         </DockPanel>
 
-        <Canvas x:Name="OverlayCanvas" IsHitTestVisible="False" Panel.ZIndex="1000"/>
+        <Canvas x:Name="OverlayCanvas" IsHitTestVisible="False" Panel.ZIndex="1000">
+            <Border x:Name="DebugHighlight" 
+                    Background="#40FFFF00"
+                    BorderBrush="Orange"
+                    BorderThickness="2"
+                    VerticalAlignment="Top"
+                    Visibility="Collapsed"/>
+        </Canvas>
     </Grid>
 </Window>
